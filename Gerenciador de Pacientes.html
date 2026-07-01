@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Observação - Plantão</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel para transpilar JSX no navegador -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body { margin: 0; padding: 0; background-color: #0f172a; }
+        
+        @keyframes emergencyBlink {
+            0%, 100% { background-color: #dc2626; color: white; border-color: #ef4444; }
+            50% { background-color: #fca5a5; color: #7f1d1d; border-color: #f87171; }
+        }
+        .animate-emergency-blink { animation: emergencyBlink 1s infinite; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn { animation: fadeIn 0.2s ease-out forwards; }
+        
+        @media print {
+            body, .print-only * { color: black !important; }
+            body { background-color: white; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            .print-table { table-layout: fixed; width: 100%; border-collapse: collapse; font-size: 11px; }
+            .print-table th { background-color: #f1f5f9 !important; -webkit-print-color-adjust: exact; border: 1px solid #cbd5e1; padding: 6px; text-align: left; font-weight: bold; word-break: normal; }
+            .print-table td { border: 1px solid #cbd5e1; padding: 6px; overflow-wrap: anywhere; white-space: pre-wrap; vertical-align: top; }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo, useRef } = React;
+
+        const Clock = ({size=24, className=""}) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        );
+        const CheckCircle2 = ({size=24, className=""}) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+        );
+        const Printer = ({size=24, className=""}) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+        );
+        const Plus = ({size=24, className=""}) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        );
+        const Trash2 = ({size=24, className=""}) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+        );
+        const Edit = ({size=24, className=""}) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        );
+        const ChevronDown = ({size=24, className=""}) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 12 15 18 9"/></svg>
+        );
+        const ChevronUp = ({size=24, className=""}) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="18 15 12 9 6 15"/></svg>
+        );
+        const Download = ({size=24, className=""}) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+        );
+        const Upload = ({size=24, className=""}) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+        );
+
+        const formatTime = (totalSeconds) => {
+            if (totalSeconds < 0) return "00:00:00";
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        };
+
+        const generateId = () => {
+            return window.crypto && crypto.randomUUID 
+                ? crypto.randomUUID() 
+                : Math.random().toString(36).substring(2, 15);
+        };
+
+        const App = () => {
+            const [patients, setPatients] = useState([]);
+            const [isPrinting, setIsPrinting] = useState(false);
+            const [editingId, setEditingId] = useState(null);
+            const [isModalOpen, setIsModalOpen] = useState(false);
+            const [expandedCards, setExpandedCards] = useState({});
+            const fileInputRef = useRef(null);
+            
+            const [formData, setFormData] = useState({
+                name: '', age: '', bed: '', triage: 'green', severity: 'green',
+                diagnosis: '', exams: '', meds: '', waiting: '', observations: '', 
+                timerH: '', timerM: '', timerS: '', resetTimer: false
+            });
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setPatients(current => current.map(p => {
+                        if (p.timerZeroed) return p;
+                        return { ...p, currentTimerSec: p.currentTimerSec - 1 };
+                    }));
+                }, 1000);
+                return () => clearInterval(interval);
+            }, []);
+
+            const handleChange = (e) => {
+                const { name, value, type, checked } = e.target;
+                setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                
+                let originalSecs = 0;
+                let timerZeroed = true;
+                
+                const h = parseInt(formData.timerH || 0);
+                const m = parseInt(formData.timerM || 0);
+                const s = parseInt(formData.timerS || 0);
+                
+                if (h > 0 || m > 0 || s > 0) {
+                    originalSecs = (h * 3600) + (m * 60) + s;
+                    timerZeroed = false;
+                }
+
+                if (editingId) {
+                    setPatients(prev => prev.map(p => {
+                        if (p.id === editingId) {
+                            const updated = {
+                                ...p,
+                                name: formData.name,
+                                age: parseInt(formData.age),
+                                bed: formData.bed,
+                                triage: formData.triage,
+                                severity: formData.severity,
+                                diagnosis: formData.diagnosis,
+                                exams: formData.exams,
+                                meds: formData.meds,
+                                waiting: formData.waiting,
+                                observations: formData.observations,
+                            };
+                            
+                            if (formData.resetTimer || p.originalTimerSec !== originalSecs) {
+                                updated.originalTimerSec = originalSecs;
+                                updated.currentTimerSec = originalSecs;
+                                updated.timerZeroed = timerZeroed;
+                            } else if (timerZeroed) {
+                                updated.timerZeroed = true;
+                                updated.currentTimerSec = 0;
+                            }
+                            
+                            return updated;
+                        }
+                        return p;
+                    }));
+                    setEditingId(null);
+                } else {
+                    const newPatient = {
+                        id: generateId(),
+                        ...formData,
+                        age: parseInt(formData.age),
+                        originalTimerSec: originalSecs,
+                        currentTimerSec: originalSecs,
+                        timerZeroed: timerZeroed
+                    };
+                    setPatients(prev => [...prev, newPatient]);
+                }
+
+                setFormData({
+                    name: '', age: '', bed: '', triage: 'green', severity: 'green',
+                    diagnosis: '', exams: '', meds: '', waiting: '', observations: '', 
+                    timerH: '', timerM: '', timerS: '', resetTimer: false
+                });
+                setIsModalOpen(false);
+            };
+
+            const handleEdit = (patient) => {
+                setEditingId(patient.id);
+                
+                const h = Math.floor(patient.originalTimerSec / 3600);
+                const m = Math.floor((patient.originalTimerSec % 3600) / 60);
+                const s = patient.originalTimerSec % 60;
+
+                setFormData({
+                    name: patient.name,
+                    age: patient.age,
+                    bed: patient.bed,
+                    triage: patient.triage,
+                    severity: patient.severity,
+                    diagnosis: patient.diagnosis,
+                    exams: patient.exams,
+                    meds: patient.meds,
+                    waiting: patient.waiting,
+                    observations: patient.observations,
+                    timerH: h > 0 ? h.toString() : '',
+                    timerM: m > 0 ? m.toString() : '',
+                    timerS: s > 0 ? s.toString() : '',
+                    resetTimer: false
+                });
+                setIsModalOpen(true);
+            };
+
+            const cancelEdit = () => {
+                setEditingId(null);
+                setFormData({
+                    name: '', age: '', bed: '', triage: 'green', severity: 'green',
+                    diagnosis: '', exams: '', meds: '', waiting: '', observations: '', 
+                    timerH: '', timerM: '', timerS: '', resetTimer: false
+                });
+                setIsModalOpen(false);
+            };
+
+            const removePatient = (id) => setPatients(prev => prev.filter(p => p.id !== id));
+            const zeroTimer = (id) => setPatients(prev => prev.map(p => p.id === id ? { ...p, timerZeroed: true, currentTimerSec: 0 } : p));
+            const toggleExpand = (id) => setExpandedCards(prev => ({ ...prev, [id]: !prev[id] }));
+
+            const handlePrint = () => {
+                setIsPrinting(true);
+                setTimeout(() => { window.print(); setIsPrinting(false); }, 500);
+            };
+
+            // Sistema de Backup de Dados
+            const handleExportData = () => {
+                const exportData = patients.map(p => ({ ...p, exportDate: Date.now() }));
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `plantao_backup_${new Date().toISOString().slice(0,10)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            };
+
+            const handleImportData = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const importedPatients = JSON.parse(event.target.result);
+                        const now = Date.now();
+                        const adjustedPatients = importedPatients.map(p => {
+                            if (p.exportDate && !p.timerZeroed) {
+                                // Subtrai do timer o tempo decorrido desde a exportação
+                                const elapsedSecs = Math.floor((now - p.exportDate) / 1000);
+                                p.currentTimerSec = p.currentTimerSec - elapsedSecs;
+                            }
+                            return p;
+                        });
+                        setPatients(adjustedPatients);
+                    } catch (err) {
+                        alert("Erro ao importar o arquivo. Verifique se é um backup válido gerado pelo sistema.");
+                    }
+                };
+                reader.readAsText(file);
+                e.target.value = ''; // Reset do input file
+            };
+
+            const severityScore = { red: 5, orange: 4, yellow: 3, green: 2, blue: 1 };
+            const colorMap = {
+                red: 'bg-red-600 text-white', orange: 'bg-orange-500 text-white',
+                yellow: 'bg-yellow-400 text-black', green: 'bg-green-500 text-white', blue: 'bg-blue-600 text-white'
+            };
+            const colorNames = { red: 'Vermelha', orange: 'Laranja', yellow: 'Amarela', green: 'Verde', blue: 'Azul' };
+
+            const liveSortedPatients = useMemo(() => {
+                return [...patients].sort((a, b) => {
+                    const getTimerPrio = (p) => {
+                        if (p.timerZeroed) return 4;
+                        if (p.currentTimerSec <= 0) return 1;
+                        return 2;
+                    };
+                    const prioA = getTimerPrio(a);
+                    const prioB = getTimerPrio(b);
+
+                    if (prioA !== prioB) return prioA - prioB;
+                    if (prioA === 2 && a.currentTimerSec !== b.currentTimerSec) {
+                        return a.currentTimerSec - b.currentTimerSec;
+                    }
+                    if (severityScore[a.severity] !== severityScore[b.severity]) {
+                        return severityScore[b.severity] - severityScore[a.severity];
+                    }
+                    return b.age - a.age;
+                });
+            }, [patients]);
+
+            const pdfSortedPatients = useMemo(() => {
+                return [...patients].sort((a, b) => {
+                    if (severityScore[a.severity] !== severityScore[b.severity]) return severityScore[b.severity] - severityScore[a.severity];
+                    return b.age - a.age;
+                });
+            }, [patients]);
+
+            const getTimerStyles = (patient) => {
+                if (patient.timerZeroed) return { backgroundColor: '#1e293b', color: '#94a3b8', label: '00:00:00' };
+                if (patient.currentTimerSec <= 0) return { isBlinking: true, label: 'Esgotado!' };
+
+                const ratio = Math.max(0, Math.min(1, patient.currentTimerSec / patient.originalTimerSec));
+                const hue = ratio * 120;
+
+                return {
+                    backgroundColor: `hsl(${hue}, 85%, 45%)`,
+                    color: ratio > 0.4 ? '#000000' : '#ffffff',
+                    label: formatTime(patient.currentTimerSec)
+                };
+            };
+
+            return (
+                <div className="min-h-screen bg-slate-900 p-1 md:p-3 font-sans text-slate-100 relative text-xs md:text-sm">
+                    
+                    {/* IMPRESSÃO (PDF) */}
+                    {isPrinting && (
+                        <div className="print-only w-full">
+                            <h1 className="text-xl font-bold mb-3">Relatório de Observação - Plantão</h1>
+                            <table className="print-table">
+                                <thead>
+                                    <tr>
+                                        <th style={{width: 'auto'}}>Paciente</th>
+                                        <th style={{width: '80px'}}>Triagem</th>
+                                        <th style={{width: 'auto'}}>Diagnóstico</th>
+                                        <th style={{width: 'auto'}}>Exames</th>
+                                        <th style={{width: 'auto'}}>Medicações</th>
+                                        <th style={{width: 'auto'}}>Aguarda</th>
+                                        <th style={{width: 'auto'}}>Obs</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {pdfSortedPatients.map(p => (
+                                        <tr key={p.id}>
+                                            <td>
+                                                <span className="font-bold text-sm block leading-tight">{p.name}</span>
+                                                <span className="block mt-1 text-xs">{p.age} anos</span>
+                                                <span className="block mt-1 text-xs font-semibold">{p.bed}</span>
+                                            </td>
+                                            <td className="font-bold text-center">
+                                                {colorNames[p.triage]}
+                                            </td>
+                                            <td>{p.diagnosis}</td>
+                                            <td>{p.exams}</td>
+                                            <td>{p.meds}</td>
+                                            <td>{p.waiting}</td>
+                                            <td>{p.observations}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+
+                    {/* INTERFACE PRINCIPAL AO VIVO */}
+                    <div className={`max-w-7xl mx-auto space-y-2 ${isPrinting ? 'no-print' : ''}`}>
+                        
+                        {/* Cabeçalho */}
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-800 p-2.5 rounded-lg shadow-sm border border-slate-700">
+                            <div>
+                                <h1 className="text-lg font-bold text-white flex items-center gap-1.5">
+                                    <Clock size={20} className="text-blue-500" />
+                                    Gestão de Observação
+                                </h1>
+                            </div>
+                            <div className="mt-2 md:mt-0 flex flex-wrap gap-2">
+                                {/* Input de Arquivo Oculto */}
+                                <input type="file" ref={fileInputRef} accept=".json" style={{display: 'none'}} onChange={handleImportData} />
+                                
+                                <button onClick={() => fileInputRef.current.click()} className="flex items-center gap-1 bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-md font-medium transition-colors border border-slate-600 text-xs">
+                                    <Upload size={14} /> Restaurar Backup
+                                </button>
+                                
+                                <button onClick={handleExportData} className="flex items-center gap-1 bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-md font-medium transition-colors border border-slate-600 text-xs">
+                                    <Download size={14} /> Salvar Backup
+                                </button>
+                                
+                                <button onClick={handlePrint} className="flex items-center gap-1 bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-md font-medium transition-colors border border-slate-600 text-xs">
+                                    <Printer size={14} /> Exportar PDF
+                                </button>
+
+                                <button onClick={() => setIsModalOpen(true)} className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md font-bold transition-colors shadow-sm ml-1 text-xs">
+                                    <Plus size={16} /> Novo Paciente
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Modal Pop-up: Adicionar/Editar */}
+                        {isModalOpen && (
+                            <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-sm flex justify-center items-start z-50 p-2 overflow-y-auto pt-6 pb-6">
+                                <div className="bg-slate-800 p-4 rounded-xl shadow-2xl border border-slate-700 w-full max-w-5xl relative">
+                                    
+                                    <button onClick={cancelEdit} className="absolute top-3 right-3 text-slate-400 hover:text-white p-1 bg-slate-700/50 rounded-lg">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                    </button>
+
+                                    <h2 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
+                                        {editingId ? <Edit size={18} className="text-blue-400" /> : <Plus size={18} className="text-blue-500" />}
+                                        {editingId ? 'Editar Paciente' : 'Adicionar Paciente'}
+                                    </h2>
+                                    
+                                    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 text-sm">
+                                        
+                                        <div className="space-y-1">
+                                            <label className="text-[11px] font-medium text-slate-400">Nome <span className="text-red-500">*</span></label>
+                                            <input required name="name" value={formData.name} onChange={handleChange} className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none text-xs" placeholder="Nome do paciente" />
+                                        </div>
+                                        
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <div className="space-y-1">
+                                                <label className="text-[11px] font-medium text-slate-400">Idade <span className="text-red-500">*</span></label>
+                                                <input required type="number" name="age" value={formData.age} onChange={handleChange} className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none text-xs" placeholder="Anos" />
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-[11px] font-medium text-slate-400">Leito <span className="text-red-500">*</span></label>
+                                                <input required name="bed" value={formData.bed} onChange={handleChange} className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none text-xs" placeholder="Ex: Obs-01" />
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-1">
+                                            <label className="text-[11px] font-medium text-slate-400">Triagem (Enfermagem) <span className="text-red-500">*</span></label>
+                                            <select required name="triage" value={formData.triage} onChange={handleChange} className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none text-xs">
+                                                <option value="red">Vermelha</option>
+                                                <option value="orange">Laranja</option>
+                                                <option value="yellow">Amarela</option>
+                                                <option value="green">Verde</option>
+                                                <option value="blue">Azul</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="space-y-1">
+                                            <label className="text-[11px] font-medium text-slate-400">Gravidade (Médica) <span className="text-red-500">*</span></label>
+                                            <select required name="severity" value={formData.severity} onChange={handleChange} className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none text-xs">
+                                                <option value="red">Vermelha (Altíssima)</option>
+                                                <option value="orange">Laranja (Alta)</option>
+                                                <option value="yellow">Amarela (Moderada)</option>
+                                                <option value="green">Verde (Baixa)</option>
+                                                <option value="blue">Azul (Mínima)</option>
+                                            </select>
+                                        </div>
+
+                                        {/* Novo Input de Timer: HH:MM:SS */}
+                                        <div className="space-y-1">
+                                            <label className="text-[11px] font-medium text-slate-400">Timer Reavaliação (HH:MM:SS)</label>
+                                            <div className="flex gap-1 items-center">
+                                                <input type="number" name="timerH" value={formData.timerH} onChange={handleChange} className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded text-xs focus:ring-1 focus:ring-blue-500 text-center" placeholder="HH" min="0" />
+                                                <span className="text-slate-500 font-bold">:</span>
+                                                <input type="number" name="timerM" value={formData.timerM} onChange={handleChange} className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded text-xs focus:ring-1 focus:ring-blue-500 text-center" placeholder="MM" min="0" max="59" />
+                                                <span className="text-slate-500 font-bold">:</span>
+                                                <input type="number" name="timerS" value={formData.timerS} onChange={handleChange} className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded text-xs focus:ring-1 focus:ring-blue-500 text-center" placeholder="SS" min="0" max="59" />
+                                            </div>
+                                            {editingId && (
+                                                <div className="flex items-center gap-1.5 mt-1">
+                                                    <input type="checkbox" id="resetTimer" name="resetTimer" checked={formData.resetTimer || false} onChange={handleChange} className="w-3 h-3 accent-blue-600 cursor-pointer" />
+                                                    <label htmlFor="resetTimer" className="text-[11px] text-slate-400 cursor-pointer">Reiniciar contagem</label>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="space-y-1 lg:col-span-3">
+                                            <label className="text-[11px] font-medium text-slate-400">Diagnóstico Principal</label>
+                                            <textarea name="diagnosis" value={formData.diagnosis} onChange={handleChange} rows="2" className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none resize-y text-xs" placeholder="Suspeita ou diagnóstico..."></textarea>
+                                        </div>
+
+                                        <div className="space-y-1 lg:col-span-2">
+                                            <label className="text-[11px] font-medium text-slate-400">Exames Solicitados</label>
+                                            <textarea name="exams" value={formData.exams} onChange={handleChange} rows="2" className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none resize-y text-xs" placeholder="Ex: Hemograma, TC crânio..."></textarea>
+                                        </div>
+
+                                        <div className="space-y-1 lg:col-span-2">
+                                            <label className="text-[11px] font-medium text-slate-400">Medicações Feitas</label>
+                                            <textarea name="meds" value={formData.meds} onChange={handleChange} rows="2" className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none resize-y text-xs" placeholder="Ex: Dipirona, Ceftriaxona..."></textarea>
+                                        </div>
+
+                                        <div className="space-y-1 lg:col-span-2">
+                                            <label className="text-[11px] font-medium text-orange-500 font-bold">Aguarda O Quê?</label>
+                                            <textarea name="waiting" value={formData.waiting} onChange={handleChange} rows="2" className="w-full bg-orange-900/20 border border-orange-700/50 text-orange-200 p-1.5 rounded focus:ring-1 focus:ring-orange-500 focus:outline-none resize-y text-xs" placeholder="Ex: Resultado laboratório, Vaga UTI..."></textarea>
+                                        </div>
+
+                                        <div className="space-y-1 lg:col-span-2">
+                                            <label className="text-[11px] font-medium text-slate-400">Observações Extras</label>
+                                            <textarea name="observations" value={formData.observations} onChange={handleChange} rows="2" className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none resize-y text-xs" placeholder="Detalhes importantes..."></textarea>
+                                        </div>
+
+                                        <div className="lg:col-span-4 flex justify-end mt-2 gap-2">
+                                            <button type="button" onClick={cancelEdit} className="bg-slate-700 hover:bg-slate-600 text-white font-medium py-1.5 px-4 rounded transition-colors border border-slate-600 text-xs">
+                                                Cancelar
+                                            </button>
+                                            <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-1.5 px-4 rounded transition-colors flex items-center gap-1.5 shadow-sm text-xs">
+                                                {editingId ? <><Edit size={14} /> Salvar</> : <><Plus size={14} /> Inserir</>}
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Cards dos Pacientes (Compactos) */}
+                        <div className="space-y-2">
+                            {liveSortedPatients.length === 0 ? (
+                                <div className="text-center py-8 bg-slate-800 rounded-lg border border-dashed border-slate-600 text-slate-400 text-sm">
+                                    Nenhum paciente em observação.
+                                </div>
+                            ) : (
+                                liveSortedPatients.map(patient => {
+                                    const timerStyle = getTimerStyles(patient);
+                                    const isBlinking = timerStyle.isBlinking;
+                                    const isExpanded = !!expandedCards[patient.id];
+                                    const hasClinicalData = patient.diagnosis || patient.exams || patient.meds || patient.waiting || patient.observations;
+
+                                    return (
+                                        <div key={patient.id} className="bg-slate-800 rounded-lg shadow-sm border border-slate-700 p-2.5 transition-all relative overflow-hidden">
+                                            
+                                            {/* Cabeçalho do Card */}
+                                            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-2">
+                                                
+                                                <div className="flex flex-col md:flex-row items-start md:items-center gap-3 w-full">
+                                                    
+                                                    {/* Nome, Idade, Leito */}
+                                                    <div className="flex flex-wrap items-center gap-1.5">
+                                                        <h3 className="text-base font-bold text-white mr-1">{patient.name}</h3>
+                                                        <span className="bg-slate-700 text-slate-300 text-[10px] px-1.5 py-0.5 rounded font-medium border border-slate-600">
+                                                            {patient.age} a
+                                                        </span>
+                                                        <span className="bg-indigo-900/50 text-indigo-300 text-[10px] px-1.5 py-0.5 rounded font-bold border border-indigo-700">
+                                                            {patient.bed}
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Timer acoplado no Header (HH:MM:SS) */}
+                                                    <div className="flex items-center gap-1.5">
+                                                        <div className={`flex items-center gap-1 px-2 py-0.5 rounded font-mono font-bold text-[11px] shadow-sm border
+                                                            ${isBlinking ? 'animate-emergency-blink border-red-500' : 'border-slate-600'}`}
+                                                            style={!isBlinking ? { backgroundColor: timerStyle.backgroundColor, color: timerStyle.color } : {}}
+                                                        >
+                                                            <Clock size={12} />
+                                                            {timerStyle.label}
+                                                        </div>
+
+                                                        {!patient.timerZeroed && (
+                                                            <button 
+                                                                onClick={() => zeroTimer(patient.id)}
+                                                                className={`p-0.5 rounded border transition-colors flex items-center justify-center
+                                                                    ${isBlinking ? 'border-red-500 text-red-500 hover:bg-red-500 hover:text-white' : 'border-slate-500 text-slate-400 hover:text-white hover:border-slate-400'}`}
+                                                                title="Zerar Timer"
+                                                            >
+                                                                <CheckCircle2 size={14} />
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                    
+                                                    {/* Tags de Triagem/Gravidade */}
+                                                    <div className="flex gap-1.5 text-[10px] font-medium lg:ml-auto">
+                                                        <span className={`px-1.5 py-0.5 rounded shadow-sm ${colorMap[patient.triage]}`}>
+                                                            {colorNames[patient.triage]}
+                                                        </span>
+                                                        <span className={`px-1.5 py-0.5 rounded shadow-sm border border-slate-500 ${colorMap[patient.severity]}`}>
+                                                            Med: {colorNames[patient.severity]}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                {/* Ações (Editar/Apagar) */}
+                                                <div className="flex gap-0.5 self-start lg:self-auto shrink-0 bg-slate-900/50 p-0.5 rounded border border-slate-700/50">
+                                                    <button onClick={() => handleEdit(patient)} className="text-slate-400 hover:text-blue-400 hover:bg-slate-800 p-1.5 rounded transition-colors" title="Editar">
+                                                        <Edit size={14} />
+                                                    </button>
+                                                    <button onClick={() => removePatient(patient.id)} className="text-slate-400 hover:text-red-400 hover:bg-slate-800 p-1.5 rounded transition-colors" title="Remover">
+                                                        <Trash2 size={14} />
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            {/* Acordeão (Exibe apenas se tiver dados) */}
+                                            {hasClinicalData && (
+                                                <button 
+                                                    onClick={() => toggleExpand(patient.id)}
+                                                    className={`mt-2 w-full flex items-center justify-center gap-1 text-[10px] uppercase tracking-wider font-bold py-1 rounded transition-colors border border-dashed
+                                                        ${isExpanded ? 'bg-slate-800 border-slate-600 text-slate-400 hover:bg-slate-700/50' : 'bg-slate-900/40 border-slate-700 text-slate-500 hover:text-slate-300 hover:bg-slate-700/30'}`}
+                                                >
+                                                    {isExpanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                                                    {isExpanded ? 'Ocultar Evolução' : 'Ver Detalhes Clínicos'}
+                                                </button>
+                                            )}
+
+                                            {/* Conteúdo Oculto */}
+                                            {isExpanded && hasClinicalData && (
+                                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 pt-2 mt-1 animate-fadeIn text-[11px]">
+                                                    {patient.diagnosis && (
+                                                        <div className="bg-slate-900/80 p-2 rounded border border-slate-700/50">
+                                                            <span className="block text-[10px] font-semibold text-slate-400 mb-0.5">Diagnóstico</span>
+                                                            <span className="text-slate-200 whitespace-pre-wrap break-words">{patient.diagnosis}</span>
+                                                        </div>
+                                                    )}
+                                                    {patient.exams && (
+                                                        <div className="bg-slate-900/80 p-2 rounded border border-slate-700/50">
+                                                            <span className="block text-[10px] font-semibold text-slate-400 mb-0.5">Exames</span>
+                                                            <span className="text-slate-200 whitespace-pre-wrap break-words">{patient.exams}</span>
+                                                        </div>
+                                                    )}
+                                                    {patient.meds && (
+                                                        <div className="bg-slate-900/80 p-2 rounded border border-slate-700/50">
+                                                            <span className="block text-[10px] font-semibold text-slate-400 mb-0.5">Medicações</span>
+                                                            <span className="text-slate-200 whitespace-pre-wrap break-words">{patient.meds}</span>
+                                                        </div>
+                                                    )}
+                                                    {patient.waiting && (
+                                                        <div className="bg-orange-900/10 p-2 rounded border border-orange-800/30 lg:col-span-2">
+                                                            <span className="block text-[10px] font-bold text-orange-500 mb-0.5">Aguarda</span>
+                                                            <span className="text-orange-200 font-medium whitespace-pre-wrap break-words">{patient.waiting}</span>
+                                                        </div>
+                                                    )}
+                                                    {patient.observations && (
+                                                        <div className="bg-slate-900/80 p-2 rounded border border-slate-700/50 lg:col-span-full">
+                                                            <span className="block text-[10px] font-semibold text-slate-400 mb-0.5">Observações</span>
+                                                            <span className="text-slate-200 italic whitespace-pre-wrap break-words">{patient.observations}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
