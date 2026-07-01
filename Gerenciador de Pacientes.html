@@ -47,6 +47,7 @@
     <script type="text/babel">
         const { useState, useEffect, useMemo, useRef } = React;
 
+        // --- ÍCONES SVG ---
         const Clock = ({size=24, className=""}) => (
             <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         );
@@ -77,6 +78,9 @@
         const Upload = ({size=24, className=""}) => (
             <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
         );
+        const AlertTriangle = ({size=24, className=""}) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        );
 
         const formatTime = (totalSeconds) => {
             if (totalSeconds < 0) return "00:00:00";
@@ -92,11 +96,35 @@
                 : Math.random().toString(36).substring(2, 15);
         };
 
+        const LOCAL_STORAGE_KEY = 'plantao_emergencia_data';
+
         const App = () => {
-            const [patients, setPatients] = useState([]);
+            // Inicialização com resgate automático de sessão local
+            const [patients, setPatients] = useState(() => {
+                try {
+                    const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+                    if (savedData) {
+                        const parsed = JSON.parse(savedData);
+                        const now = Date.now();
+                        return parsed.map(p => {
+                            if (p.exportDate && !p.timerZeroed) {
+                                // Subtrai o tempo em que o app ficou fechado
+                                const elapsedSecs = Math.floor((now - p.exportDate) / 1000);
+                                p.currentTimerSec = p.currentTimerSec - elapsedSecs;
+                            }
+                            return p;
+                        });
+                    }
+                } catch (e) {
+                    console.error("Erro ao restaurar sessão:", e);
+                }
+                return [];
+            });
+            
             const [isPrinting, setIsPrinting] = useState(false);
             const [editingId, setEditingId] = useState(null);
             const [isModalOpen, setIsModalOpen] = useState(false);
+            const [isConfirmClearOpen, setIsConfirmClearOpen] = useState(false);
             const [expandedCards, setExpandedCards] = useState({});
             const fileInputRef = useRef(null);
             
@@ -106,6 +134,7 @@
                 timerH: '', timerM: '', timerS: '', resetTimer: false
             });
 
+            // Timer Tick - a cada segundo atualiza os pacientes
             useEffect(() => {
                 const interval = setInterval(() => {
                     setPatients(current => current.map(p => {
@@ -115,6 +144,12 @@
                 }, 1000);
                 return () => clearInterval(interval);
             }, []);
+
+            // Auto-Save: Sempre que a lista de pacientes for alterada, salva no navegador
+            useEffect(() => {
+                const dataToSave = patients.map(p => ({ ...p, exportDate: Date.now() }));
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToSave));
+            }, [patients]);
 
             const handleChange = (e) => {
                 const { name, value, type, checked } = e.target;
@@ -227,12 +262,19 @@
             const zeroTimer = (id) => setPatients(prev => prev.map(p => p.id === id ? { ...p, timerZeroed: true, currentTimerSec: 0 } : p));
             const toggleExpand = (id) => setExpandedCards(prev => ({ ...prev, [id]: !prev[id] }));
 
+            // Apaga todos os dados da tela e do local storage
+            const handleClearAll = () => {
+                setPatients([]);
+                localStorage.removeItem(LOCAL_STORAGE_KEY);
+                setIsConfirmClearOpen(false);
+            };
+
             const handlePrint = () => {
                 setIsPrinting(true);
                 setTimeout(() => { window.print(); setIsPrinting(false); }, 500);
             };
 
-            // Sistema de Backup de Dados
+            // Sistema de Backup de Dados em Arquivo
             const handleExportData = () => {
                 const exportData = patients.map(p => ({ ...p, exportDate: Date.now() }));
                 const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
@@ -254,7 +296,6 @@
                         const now = Date.now();
                         const adjustedPatients = importedPatients.map(p => {
                             if (p.exportDate && !p.timerZeroed) {
-                                // Subtrai do timer o tempo decorrido desde a exportação
                                 const elapsedSecs = Math.floor((now - p.exportDate) / 1000);
                                 p.currentTimerSec = p.currentTimerSec - elapsedSecs;
                             }
@@ -266,7 +307,7 @@
                     }
                 };
                 reader.readAsText(file);
-                e.target.value = ''; // Reset do input file
+                e.target.value = '';
             };
 
             const severityScore = { red: 5, orange: 4, yellow: 3, green: 2, blue: 1 };
@@ -372,8 +413,11 @@
                                 </h1>
                             </div>
                             <div className="mt-2 md:mt-0 flex flex-wrap gap-2">
-                                {/* Input de Arquivo Oculto */}
                                 <input type="file" ref={fileInputRef} accept=".json" style={{display: 'none'}} onChange={handleImportData} />
+                                
+                                <button onClick={() => setIsConfirmClearOpen(true)} className="flex items-center gap-1 bg-red-900/40 hover:bg-red-800 text-red-300 hover:text-white px-2.5 py-1.5 rounded-md font-medium transition-colors border border-red-800/60 text-xs mr-2">
+                                    <Trash2 size={14} /> Limpar Plantão
+                                </button>
                                 
                                 <button onClick={() => fileInputRef.current.click()} className="flex items-center gap-1 bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-md font-medium transition-colors border border-slate-600 text-xs">
                                     <Upload size={14} /> Restaurar Backup
@@ -393,10 +437,29 @@
                             </div>
                         </div>
 
+                        {/* Modal de Confirmação: Limpar Todos os Dados */}
+                        {isConfirmClearOpen && (
+                            <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+                                <div className="bg-slate-800 p-6 rounded-xl shadow-2xl border border-red-900/50 w-full max-w-md text-center animate-fadeIn">
+                                    <AlertTriangle size={48} className="text-red-500 mx-auto mb-4" />
+                                    <h2 className="text-lg font-bold text-white mb-2">Apagar Todos os Dados?</h2>
+                                    <p className="text-slate-300 text-sm mb-6">Isso removerá todos os pacientes da tela e apagará o salvamento automático do navegador. Faça o "Download Backup" antes se quiser guardar a lista.</p>
+                                    <div className="flex justify-center gap-3">
+                                        <button onClick={() => setIsConfirmClearOpen(false)} className="bg-slate-700 hover:bg-slate-600 text-white font-medium py-2 px-5 rounded-lg transition-colors text-sm border border-slate-600">
+                                            Cancelar
+                                        </button>
+                                        <button onClick={handleClearAll} className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-5 rounded-lg transition-colors text-sm shadow-sm flex items-center gap-2">
+                                            <Trash2 size={16} /> Sim, Limpar Plantão
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Modal Pop-up: Adicionar/Editar */}
                         {isModalOpen && (
                             <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-sm flex justify-center items-start z-50 p-2 overflow-y-auto pt-6 pb-6">
-                                <div className="bg-slate-800 p-4 rounded-xl shadow-2xl border border-slate-700 w-full max-w-5xl relative">
+                                <div className="bg-slate-800 p-4 rounded-xl shadow-2xl border border-slate-700 w-full max-w-5xl relative animate-fadeIn">
                                     
                                     <button onClick={cancelEdit} className="absolute top-3 right-3 text-slate-400 hover:text-white p-1 bg-slate-700/50 rounded-lg">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -447,7 +510,6 @@
                                             </select>
                                         </div>
 
-                                        {/* Novo Input de Timer: HH:MM:SS */}
                                         <div className="space-y-1">
                                             <label className="text-[11px] font-medium text-slate-400">Timer Reavaliação (HH:MM:SS)</label>
                                             <div className="flex gap-1 items-center">
