@@ -47,40 +47,26 @@
     <script type="text/babel">
         const { useState, useEffect, useMemo, useRef } = React;
 
-        // --- ÍCONES SVG ---
-        const Clock = ({size=24, className=""}) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        );
-        const CheckCircle2 = ({size=24, className=""}) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-        );
-        const Printer = ({size=24, className=""}) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
-        );
-        const Plus = ({size=24, className=""}) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-        );
-        const Trash2 = ({size=24, className=""}) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
-        );
-        const Edit = ({size=24, className=""}) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        );
-        const ChevronDown = ({size=24, className=""}) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 12 15 18 9"/></svg>
-        );
-        const ChevronUp = ({size=24, className=""}) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="18 15 12 9 6 15"/></svg>
-        );
-        const Download = ({size=24, className=""}) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-        );
-        const Upload = ({size=24, className=""}) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
-        );
-        const AlertTriangle = ({size=24, className=""}) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        );
+        const Clock = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>;
+        const CheckCircle2 = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>;
+        const Printer = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>;
+        const Plus = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M5 12h14"/><path d="M12 5v14"/></svg>;
+        const Trash2 = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>;
+        const Edit = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>;
+        const ChevronDown = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 12 15 18 9"/></svg>;
+        const ChevronUp = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="18 15 12 9 6 15"/></svg>;
+        const UserCheck = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>;
+        const History = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>;
+        const Download = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>;
+        const Upload = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>;
+        const AlertTriangle = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>;
+        const Filter = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>;
+        const TagIcon = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>;
+        const Mars = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M16 3h5v5"/><path d="m21 3-6.75 6.75"/><circle cx="10" cy="14" r="6"/></svg>;
+        const Venus = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 15v7"/><path d="M9 19h6"/><circle cx="12" cy="9" r="6"/></svg>;
+        const X = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
+        const HeartOff = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="m2 2 20 20"/></svg>;
+        const Check = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="20 6 9 17 4 12"/></svg>;
 
         const formatTime = (totalSeconds) => {
             if (totalSeconds < 0) return "00:00:00";
@@ -90,16 +76,58 @@
             return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
         };
 
-        const generateId = () => {
-            return window.crypto && crypto.randomUUID 
-                ? crypto.randomUUID() 
-                : Math.random().toString(36).substring(2, 15);
+        const generateId = () => window.crypto && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
+
+        const calculateAgeFromDOB = (dobStr, referenceDate = new Date()) => {
+            if (!dobStr) return { years: '', months: '', days: '' };
+            const birthDate = new Date(dobStr);
+            const birthDateLocal = new Date(birthDate.getTime() + birthDate.getTimezoneOffset() * 60000);
+            
+            let years = referenceDate.getFullYear() - birthDateLocal.getFullYear();
+            let months = referenceDate.getMonth() - birthDateLocal.getMonth();
+            let days = referenceDate.getDate() - birthDateLocal.getDate();
+
+            if (days < 0) {
+                months--;
+                const prevMonth = new Date(referenceDate.getFullYear(), referenceDate.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+            return { years: years.toString(), months: months.toString(), days: days.toString() };
+        };
+
+        const formatAgeDisplay = (p) => {
+            let parts = [];
+            const y = parseInt(p.ageYears);
+            const m = parseInt(p.ageMonths);
+            const d = parseInt(p.ageDays);
+
+            if (!isNaN(y) && y > 0) parts.push(`${y} a`);
+            if (!isNaN(m) && m > 0) parts.push(`${m} m`);
+            if (!isNaN(d) && d > 0) parts.push(`${d} d`);
+
+            if (parts.length === 0) {
+                if (y === 0) return "0 a"; 
+                return "? a";
+            }
+            return parts.join(' ');
+        };
+
+        const getTotalAgeDays = (p) => {
+            const y = parseInt(p.ageYears) || 0;
+            const m = parseInt(p.ageMonths) || 0;
+            const d = parseInt(p.ageDays) || 0;
+            return (y * 365) + (m * 30) + d;
         };
 
         const LOCAL_STORAGE_KEY = 'plantao_emergencia_data';
+        const LOCAL_STORAGE_TAGS_KEY = 'plantao_emergencia_tags';
+        const DEFAULT_TAGS = ["Pediatria", "Gineco-Obstetrícia", "Saúde Mental", "Trauma", "AVC", "IAM", "IVAS", "Sepse", "Cirurgia Geral"];
 
         const App = () => {
-            // Inicialização com resgate automático de sessão local
             const [patients, setPatients] = useState(() => {
                 try {
                     const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -108,33 +136,52 @@
                         const now = Date.now();
                         return parsed.map(p => {
                             if (p.exportDate && !p.timerZeroed) {
-                                // Subtrai o tempo em que o app ficou fechado
                                 const elapsedSecs = Math.floor((now - p.exportDate) / 1000);
                                 p.currentTimerSec = p.currentTimerSec - elapsedSecs;
                             }
+                            if (!p.gender) p.gender = 'M';
+                            if (!p.tags) p.tags = [];
+                            if (!p.status) p.status = 'active'; 
+                            // Compatibilidade com idades antigas
+                            if (p.age !== undefined && p.ageYears === undefined) p.ageYears = p.age.toString();
                             return p;
                         });
                     }
-                } catch (e) {
-                    console.error("Erro ao restaurar sessão:", e);
-                }
+                } catch (e) { console.error("Erro ao restaurar sessão:", e); }
                 return [];
+            });
+
+            const [availableTags, setAvailableTags] = useState(() => {
+                try {
+                    const savedTags = localStorage.getItem(LOCAL_STORAGE_TAGS_KEY);
+                    if (savedTags) return JSON.parse(savedTags);
+                } catch (e) {}
+                return DEFAULT_TAGS;
             });
             
             const [isPrinting, setIsPrinting] = useState(false);
             const [editingId, setEditingId] = useState(null);
             const [isModalOpen, setIsModalOpen] = useState(false);
             const [isConfirmClearOpen, setIsConfirmClearOpen] = useState(false);
+            const [isDischargedModalOpen, setIsDischargedModalOpen] = useState(false);
+            const [isTagManagerOpen, setIsTagManagerOpen] = useState(false);
+            const [isFilterOpen, setIsFilterOpen] = useState(false);
             const [expandedCards, setExpandedCards] = useState({});
+            const [selectedPatients, setSelectedPatients] = useState(new Set());
+            const [newTagInput, setNewTagInput] = useState('');
+            const [currentDateStr, setCurrentDateStr] = useState(new Date().toDateString());
             const fileInputRef = useRef(null);
             
             const [formData, setFormData] = useState({
-                name: '', age: '', bed: '', triage: 'green', severity: 'green',
+                name: '', ageInputMode: 'manual', ageYears: '', ageMonths: '', ageDays: '', dob: '', 
+                gender: 'M', bed: '', triage: 'green', severity: 'green',
                 diagnosis: '', exams: '', meds: '', waiting: '', observations: '', 
-                timerH: '', timerM: '', timerS: '', resetTimer: false
+                timerH: '', timerM: '', timerS: '', resetTimer: false, tags: []
             });
 
-            // Timer Tick - a cada segundo atualiza os pacientes
+            const [filters, setFilters] = useState({ name: '', ageMin: '', ageMax: '', gender: '', triage: '', severity: '', tags: [] });
+
+            // Timer Tick de 1 segundo
             useEffect(() => {
                 const interval = setInterval(() => {
                     setPatients(current => current.map(p => {
@@ -145,20 +192,73 @@
                 return () => clearInterval(interval);
             }, []);
 
-            // Auto-Save: Sempre que a lista de pacientes for alterada, salva no navegador
+            // Verificador de Mudança de Dia (Plantão Noturno)
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    const nowStr = new Date().toDateString();
+                    if (nowStr !== currentDateStr) {
+                        setCurrentDateStr(nowStr);
+                        setPatients(current => current.map(p => {
+                            if (p.ageInputMode === 'dob' && p.dob) {
+                                const newAge = calculateAgeFromDOB(p.dob, new Date());
+                                return { ...p, ageYears: newAge.years, ageMonths: newAge.months, ageDays: newAge.days };
+                            }
+                            return p;
+                        }));
+                    }
+                }, 60000); // Checa a cada minuto
+                return () => clearInterval(interval);
+            }, [currentDateStr]);
+
             useEffect(() => {
                 const dataToSave = patients.map(p => ({ ...p, exportDate: Date.now() }));
                 localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToSave));
             }, [patients]);
+
+            useEffect(() => {
+                localStorage.setItem(LOCAL_STORAGE_TAGS_KEY, JSON.stringify(availableTags));
+            }, [availableTags]);
 
             const handleChange = (e) => {
                 const { name, value, type, checked } = e.target;
                 setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
             };
 
+            const handleFilterChange = (e) => {
+                const { name, value } = e.target;
+                setFilters(prev => ({ ...prev, [name]: value }));
+            };
+
+            const toggleFormTag = (tag) => {
+                setFormData(prev => {
+                    const hasTag = prev.tags.includes(tag);
+                    return { ...prev, tags: hasTag ? prev.tags.filter(t => t !== tag) : [...prev.tags, tag] };
+                });
+            };
+
+            const toggleFilterTag = (tag) => {
+                setFilters(prev => {
+                    const hasTag = prev.tags.includes(tag);
+                    return { ...prev, tags: hasTag ? prev.tags.filter(t => t !== tag) : [...prev.tags, tag] };
+                });
+            };
+
+            const handleAddCustomTag = (e) => {
+                e.preventDefault();
+                if (!newTagInput.trim()) return;
+                const tag = newTagInput.trim();
+                if (!availableTags.includes(tag)) setAvailableTags(prev => [...prev, tag]);
+                setNewTagInput('');
+            };
+
+            const deleteCustomTag = (tagToDelete) => {
+                if(confirm(`Excluir a tag "${tagToDelete}" do sistema? (Ela permanecerá nos pacientes que já a possuem)`)) {
+                    setAvailableTags(prev => prev.filter(t => t !== tagToDelete));
+                }
+            };
+
             const handleSubmit = (e) => {
                 e.preventDefault();
-                
                 let originalSecs = 0;
                 let timerZeroed = true;
                 
@@ -171,23 +271,28 @@
                     timerZeroed = false;
                 }
 
+                // Calcular Idade baseada na Data de Nascimento se for o caso
+                let finalAgeData = {
+                    ageYears: formData.ageYears,
+                    ageMonths: formData.ageMonths,
+                    ageDays: formData.ageDays
+                };
+
+                if (formData.ageInputMode === 'dob' && formData.dob) {
+                    const calcAge = calculateAgeFromDOB(formData.dob);
+                    finalAgeData = {
+                        ageYears: calcAge.years,
+                        ageMonths: calcAge.months,
+                        ageDays: calcAge.days
+                    };
+                }
+
                 if (editingId) {
                     setPatients(prev => prev.map(p => {
                         if (p.id === editingId) {
-                            const updated = {
-                                ...p,
-                                name: formData.name,
-                                age: parseInt(formData.age),
-                                bed: formData.bed,
-                                triage: formData.triage,
-                                severity: formData.severity,
-                                diagnosis: formData.diagnosis,
-                                exams: formData.exams,
-                                meds: formData.meds,
-                                waiting: formData.waiting,
-                                observations: formData.observations,
+                            const updated = { 
+                                ...p, ...formData, ...finalAgeData
                             };
-                            
                             if (formData.resetTimer || p.originalTimerSec !== originalSecs) {
                                 updated.originalTimerSec = originalSecs;
                                 updated.currentTimerSec = originalSecs;
@@ -196,7 +301,6 @@
                                 updated.timerZeroed = true;
                                 updated.currentTimerSec = 0;
                             }
-                            
                             return updated;
                         }
                         return p;
@@ -204,65 +308,73 @@
                     setEditingId(null);
                 } else {
                     const newPatient = {
-                        id: generateId(),
-                        ...formData,
-                        age: parseInt(formData.age),
-                        originalTimerSec: originalSecs,
-                        currentTimerSec: originalSecs,
-                        timerZeroed: timerZeroed
+                        id: generateId(), ...formData, ...finalAgeData,
+                        originalTimerSec: originalSecs, currentTimerSec: originalSecs,
+                        timerZeroed: timerZeroed, status: 'active'
                     };
                     setPatients(prev => [...prev, newPatient]);
                 }
-
-                setFormData({
-                    name: '', age: '', bed: '', triage: 'green', severity: 'green',
-                    diagnosis: '', exams: '', meds: '', waiting: '', observations: '', 
-                    timerH: '', timerM: '', timerS: '', resetTimer: false
-                });
+                resetForm();
                 setIsModalOpen(false);
             };
 
             const handleEdit = (patient) => {
                 setEditingId(patient.id);
-                
                 const h = Math.floor(patient.originalTimerSec / 3600);
                 const m = Math.floor((patient.originalTimerSec % 3600) / 60);
                 const s = patient.originalTimerSec % 60;
-
                 setFormData({
-                    name: patient.name,
-                    age: patient.age,
-                    bed: patient.bed,
-                    triage: patient.triage,
-                    severity: patient.severity,
-                    diagnosis: patient.diagnosis,
-                    exams: patient.exams,
-                    meds: patient.meds,
-                    waiting: patient.waiting,
-                    observations: patient.observations,
-                    timerH: h > 0 ? h.toString() : '',
-                    timerM: m > 0 ? m.toString() : '',
-                    timerS: s > 0 ? s.toString() : '',
+                    name: patient.name, 
+                    ageInputMode: patient.ageInputMode || 'manual',
+                    dob: patient.dob || '',
+                    ageYears: patient.ageYears !== undefined ? patient.ageYears.toString() : '', 
+                    ageMonths: patient.ageMonths !== undefined ? patient.ageMonths.toString() : '', 
+                    ageDays: patient.ageDays !== undefined ? patient.ageDays.toString() : '', 
+                    gender: patient.gender || 'M', bed: patient.bed,
+                    triage: patient.triage, severity: patient.severity,
+                    diagnosis: patient.diagnosis, exams: patient.exams, meds: patient.meds,
+                    waiting: patient.waiting, observations: patient.observations, tags: patient.tags || [],
+                    timerH: h > 0 ? h.toString() : '', timerM: m > 0 ? m.toString() : '', timerS: s > 0 ? s.toString() : '',
                     resetTimer: false
                 });
                 setIsModalOpen(true);
             };
 
-            const cancelEdit = () => {
+            const resetForm = () => {
                 setEditingId(null);
                 setFormData({
-                    name: '', age: '', bed: '', triage: 'green', severity: 'green',
-                    diagnosis: '', exams: '', meds: '', waiting: '', observations: '', 
+                    name: '', ageInputMode: 'manual', ageYears: '', ageMonths: '', ageDays: '', dob: '', 
+                    gender: 'M', bed: '', triage: 'green', severity: 'green',
+                    diagnosis: '', exams: '', meds: '', waiting: '', observations: '', tags: [],
                     timerH: '', timerM: '', timerS: '', resetTimer: false
                 });
-                setIsModalOpen(false);
             };
 
             const removePatient = (id) => setPatients(prev => prev.filter(p => p.id !== id));
             const zeroTimer = (id) => setPatients(prev => prev.map(p => p.id === id ? { ...p, timerZeroed: true, currentTimerSec: 0 } : p));
             const toggleExpand = (id) => setExpandedCards(prev => ({ ...prev, [id]: !prev[id] }));
+            const dischargePatient = (id) => setPatients(prev => prev.map(p => p.id === id ? { ...p, status: 'discharged', timerZeroed: true, currentTimerSec: 0 } : p));
+            const declareDeath = (id) => setPatients(prev => prev.map(p => p.id === id ? { ...p, status: 'deceased', timerZeroed: true, currentTimerSec: 0 } : p));
+            const reactivatePatient = (id) => setPatients(prev => prev.map(p => p.id === id ? { ...p, status: 'active' } : p));
 
-            // Apaga todos os dados da tela e do local storage
+            const toggleSelection = (id) => {
+                const newSet = new Set(selectedPatients);
+                if (newSet.has(id)) newSet.delete(id); else newSet.add(id);
+                setSelectedPatients(newSet);
+            };
+
+            const bulkDischarge = () => {
+                setPatients(prev => prev.map(p => selectedPatients.has(p.id) ? { ...p, status: 'discharged', timerZeroed: true, currentTimerSec: 0 } : p));
+                setSelectedPatients(new Set());
+            };
+
+            const bulkDelete = () => {
+                if(confirm(`Tem certeza que deseja excluir ${selectedPatients.size} paciente(s)?`)) {
+                    setPatients(prev => prev.filter(p => !selectedPatients.has(p.id)));
+                    setSelectedPatients(new Set());
+                }
+            };
+
             const handleClearAll = () => {
                 setPatients([]);
                 localStorage.removeItem(LOCAL_STORAGE_KEY);
@@ -274,16 +386,13 @@
                 setTimeout(() => { window.print(); setIsPrinting(false); }, 500);
             };
 
-            // Sistema de Backup de Dados em Arquivo
             const handleExportData = () => {
                 const exportData = patients.map(p => ({ ...p, exportDate: Date.now() }));
                 const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.href = url;
-                a.download = `plantao_backup_${new Date().toISOString().slice(0,10)}.json`;
-                a.click();
-                URL.revokeObjectURL(url);
+                a.href = url; a.download = `plantao_backup_${new Date().toISOString().slice(0,10)}.json`;
+                a.click(); URL.revokeObjectURL(url);
             };
 
             const handleImportData = (e) => {
@@ -299,12 +408,14 @@
                                 const elapsedSecs = Math.floor((now - p.exportDate) / 1000);
                                 p.currentTimerSec = p.currentTimerSec - elapsedSecs;
                             }
+                            if (!p.gender) p.gender = 'M';
+                            if (!p.tags) p.tags = [];
+                            if (!p.status) p.status = 'active';
+                            if (p.age !== undefined && p.ageYears === undefined) p.ageYears = p.age.toString();
                             return p;
                         });
                         setPatients(adjustedPatients);
-                    } catch (err) {
-                        alert("Erro ao importar o arquivo. Verifique se é um backup válido gerado pelo sistema.");
-                    }
+                    } catch (err) { alert("Erro ao importar o arquivo. Verifique se é um backup válido."); }
                 };
                 reader.readAsText(file);
                 e.target.value = '';
@@ -315,10 +426,31 @@
                 red: 'bg-red-600 text-white', orange: 'bg-orange-500 text-white',
                 yellow: 'bg-yellow-400 text-black', green: 'bg-green-500 text-white', blue: 'bg-blue-600 text-white'
             };
-            const colorNames = { red: 'Vermelha', orange: 'Laranja', yellow: 'Amarela', green: 'Verde', blue: 'Azul' };
+            const colorNamesTriage = { red: 'Vermelha', orange: 'Laranja', yellow: 'Amarela', green: 'Verde', blue: 'Azul' };
+            const colorNamesSeverity = { red: 'Crítico', orange: 'Grave', yellow: 'Moderado', green: 'Brando', blue: 'Eletivo' };
+
+            const activePatients = useMemo(() => patients.filter(p => p.status === 'active'), [patients]);
+            const dischargedPatients = useMemo(() => patients.filter(p => p.status === 'discharged' || p.status === 'deceased'), [patients]);
+
+            const filteredActivePatients = useMemo(() => {
+                return activePatients.filter(p => {
+                    const y = parseInt(p.ageYears) || 0;
+                    if (filters.name && !p.name.toLowerCase().includes(filters.name.toLowerCase())) return false;
+                    if (filters.ageMin && y < parseInt(filters.ageMin)) return false;
+                    if (filters.ageMax && y > parseInt(filters.ageMax)) return false;
+                    if (filters.gender && p.gender !== filters.gender) return false;
+                    if (filters.triage && p.triage !== filters.triage) return false;
+                    if (filters.severity && p.severity !== filters.severity) return false;
+                    if (filters.tags.length > 0) {
+                        const hasRequiredTags = filters.tags.every(tag => p.tags?.includes(tag));
+                        if (!hasRequiredTags) return false;
+                    }
+                    return true;
+                });
+            }, [activePatients, filters]);
 
             const liveSortedPatients = useMemo(() => {
-                return [...patients].sort((a, b) => {
+                return [...filteredActivePatients].sort((a, b) => {
                     const getTimerPrio = (p) => {
                         if (p.timerZeroed) return 4;
                         if (p.currentTimerSec <= 0) return 1;
@@ -326,35 +458,27 @@
                     };
                     const prioA = getTimerPrio(a);
                     const prioB = getTimerPrio(b);
-
                     if (prioA !== prioB) return prioA - prioB;
-                    if (prioA === 2 && a.currentTimerSec !== b.currentTimerSec) {
-                        return a.currentTimerSec - b.currentTimerSec;
-                    }
-                    if (severityScore[a.severity] !== severityScore[b.severity]) {
-                        return severityScore[b.severity] - severityScore[a.severity];
-                    }
-                    return b.age - a.age;
+                    if (prioA === 2 && a.currentTimerSec !== b.currentTimerSec) return a.currentTimerSec - b.currentTimerSec;
+                    if (severityScore[a.severity] !== severityScore[b.severity]) return severityScore[b.severity] - severityScore[a.severity];
+                    return getTotalAgeDays(b) - getTotalAgeDays(a);
                 });
-            }, [patients]);
+            }, [filteredActivePatients]);
 
             const pdfSortedPatients = useMemo(() => {
-                return [...patients].sort((a, b) => {
+                return [...activePatients].sort((a, b) => {
                     if (severityScore[a.severity] !== severityScore[b.severity]) return severityScore[b.severity] - severityScore[a.severity];
-                    return b.age - a.age;
+                    return getTotalAgeDays(b) - getTotalAgeDays(a);
                 });
-            }, [patients]);
+            }, [activePatients]);
 
             const getTimerStyles = (patient) => {
                 if (patient.timerZeroed) return { backgroundColor: '#1e293b', color: '#94a3b8', label: '00:00:00' };
                 if (patient.currentTimerSec <= 0) return { isBlinking: true, label: 'Esgotado!' };
-
                 const ratio = Math.max(0, Math.min(1, patient.currentTimerSec / patient.originalTimerSec));
                 const hue = ratio * 120;
-
                 return {
-                    backgroundColor: `hsl(${hue}, 85%, 45%)`,
-                    color: ratio > 0.4 ? '#000000' : '#ffffff',
+                    backgroundColor: `hsl(${hue}, 85%, 45%)`, color: ratio > 0.4 ? '#000000' : '#ffffff',
                     label: formatTime(patient.currentTimerSec)
                 };
             };
@@ -383,12 +507,10 @@
                                         <tr key={p.id}>
                                             <td>
                                                 <span className="font-bold text-sm block leading-tight">{p.name}</span>
-                                                <span className="block mt-1 text-xs">{p.age} anos</span>
+                                                <span className="block mt-1 text-xs">{formatAgeDisplay(p)} ({p.gender === 'F' ? 'F' : 'M'})</span>
                                                 <span className="block mt-1 text-xs font-semibold">{p.bed}</span>
                                             </td>
-                                            <td className="font-bold text-center">
-                                                {colorNames[p.triage]}
-                                            </td>
+                                            <td className="font-bold text-center">{colorNamesTriage[p.triage]}</td>
                                             <td>{p.diagnosis}</td>
                                             <td>{p.exams}</td>
                                             <td>{p.meds}</td>
@@ -415,72 +537,217 @@
                             <div className="mt-2 md:mt-0 flex flex-wrap gap-2">
                                 <input type="file" ref={fileInputRef} accept=".json" style={{display: 'none'}} onChange={handleImportData} />
                                 
+                                <button onClick={() => setIsFilterOpen(!isFilterOpen)} className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md font-medium transition-colors border text-xs mr-2 ${isFilterOpen ? 'bg-blue-900/50 border-blue-500 text-blue-200' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600 hover:text-white'}`}>
+                                    <Filter size={14} /> Filtros
+                                </button>
+                                <button onClick={() => setIsTagManagerOpen(true)} className="flex items-center gap-1 bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white px-2.5 py-1.5 rounded-md font-medium transition-colors border border-slate-600 text-xs mr-2">
+                                    <TagIcon size={14} /> Gerenciar Tags
+                                </button>
                                 <button onClick={() => setIsConfirmClearOpen(true)} className="flex items-center gap-1 bg-red-900/40 hover:bg-red-800 text-red-300 hover:text-white px-2.5 py-1.5 rounded-md font-medium transition-colors border border-red-800/60 text-xs mr-2">
                                     <Trash2 size={14} /> Limpar Plantão
                                 </button>
-                                
+                                <button onClick={() => setIsDischargedModalOpen(true)} className="flex items-center gap-1 bg-green-900/40 hover:bg-green-800 text-green-300 hover:text-white px-2.5 py-1.5 rounded-md font-medium transition-colors border border-green-800/60 text-xs mr-2">
+                                    <History size={14} /> Histórico (Altas/Óbitos)
+                                </button>
                                 <button onClick={() => fileInputRef.current.click()} className="flex items-center gap-1 bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-md font-medium transition-colors border border-slate-600 text-xs">
-                                    <Upload size={14} /> Restaurar Backup
+                                    <Upload size={14} /> Restaurar
                                 </button>
-                                
                                 <button onClick={handleExportData} className="flex items-center gap-1 bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-md font-medium transition-colors border border-slate-600 text-xs">
-                                    <Download size={14} /> Salvar Backup
+                                    <Download size={14} /> Backup
                                 </button>
-                                
                                 <button onClick={handlePrint} className="flex items-center gap-1 bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-md font-medium transition-colors border border-slate-600 text-xs">
-                                    <Printer size={14} /> Exportar PDF
+                                    <Printer size={14} /> Imprimir PDF
                                 </button>
-
                                 <button onClick={() => setIsModalOpen(true)} className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md font-bold transition-colors shadow-sm ml-1 text-xs">
                                     <Plus size={16} /> Novo Paciente
                                 </button>
                             </div>
                         </div>
 
-                        {/* Modal de Confirmação: Limpar Todos os Dados */}
-                        {isConfirmClearOpen && (
-                            <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-                                <div className="bg-slate-800 p-6 rounded-xl shadow-2xl border border-red-900/50 w-full max-w-md text-center animate-fadeIn">
-                                    <AlertTriangle size={48} className="text-red-500 mx-auto mb-4" />
-                                    <h2 className="text-lg font-bold text-white mb-2">Apagar Todos os Dados?</h2>
-                                    <p className="text-slate-300 text-sm mb-6">Isso removerá todos os pacientes da tela e apagará o salvamento automático do navegador. Faça o "Download Backup" antes se quiser guardar a lista.</p>
-                                    <div className="flex justify-center gap-3">
-                                        <button onClick={() => setIsConfirmClearOpen(false)} className="bg-slate-700 hover:bg-slate-600 text-white font-medium py-2 px-5 rounded-lg transition-colors text-sm border border-slate-600">
-                                            Cancelar
-                                        </button>
-                                        <button onClick={handleClearAll} className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-5 rounded-lg transition-colors text-sm shadow-sm flex items-center gap-2">
-                                            <Trash2 size={16} /> Sim, Limpar Plantão
-                                        </button>
+                        {/* Barra de Filtros (Expansível) */}
+                        {isFilterOpen && (
+                            <div className="bg-slate-800 border border-slate-700 p-3 rounded-lg animate-fadeIn flex flex-wrap gap-3 items-end">
+                                <div className="space-y-1">
+                                    <label className="text-[10px] font-medium text-slate-400">Nome do Paciente</label>
+                                    <input name="name" value={filters.name} onChange={handleFilterChange} className="w-40 bg-slate-900 border border-slate-700 text-white p-1.5 rounded text-xs focus:ring-1 focus:ring-blue-500" placeholder="Buscar..." />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-[10px] font-medium text-slate-400">Idade Anos (Min - Max)</label>
+                                    <div className="flex gap-1">
+                                        <input type="number" name="ageMin" value={filters.ageMin} onChange={handleFilterChange} className="w-16 bg-slate-900 border border-slate-700 text-white p-1.5 rounded text-xs text-center focus:ring-1 focus:ring-blue-500" placeholder="Min" />
+                                        <input type="number" name="ageMax" value={filters.ageMax} onChange={handleFilterChange} className="w-16 bg-slate-900 border border-slate-700 text-white p-1.5 rounded text-xs text-center focus:ring-1 focus:ring-blue-500" placeholder="Max" />
+                                    </div>
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-[10px] font-medium text-slate-400">Sexo</label>
+                                    <select name="gender" value={filters.gender} onChange={handleFilterChange} className="w-24 bg-slate-900 border border-slate-700 text-white p-1.5 rounded text-xs focus:ring-1 focus:ring-blue-500">
+                                        <option value="">Todos</option>
+                                        <option value="M">Masculino</option>
+                                        <option value="F">Feminino</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-[10px] font-medium text-slate-400">Triagem</label>
+                                    <select name="triage" value={filters.triage} onChange={handleFilterChange} className="w-28 bg-slate-900 border border-slate-700 text-white p-1.5 rounded text-xs focus:ring-1 focus:ring-blue-500">
+                                        <option value="">Todas</option>
+                                        <option value="red">Vermelha</option>
+                                        <option value="orange">Laranja</option>
+                                        <option value="yellow">Amarela</option>
+                                        <option value="green">Verde</option>
+                                        <option value="blue">Azul</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-[10px] font-medium text-slate-400">Gravidade</label>
+                                    <select name="severity" value={filters.severity} onChange={handleFilterChange} className="w-28 bg-slate-900 border border-slate-700 text-white p-1.5 rounded text-xs focus:ring-1 focus:ring-blue-500">
+                                        <option value="">Todas</option>
+                                        <option value="red">Crítico</option>
+                                        <option value="orange">Grave</option>
+                                        <option value="yellow">Moderado</option>
+                                        <option value="green">Brando</option>
+                                        <option value="blue">Eletivo</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-1 flex-1 min-w-[200px]">
+                                    <label className="text-[10px] font-medium text-slate-400">Filtrar por Tags</label>
+                                    <div className="flex flex-wrap gap-1 mt-0.5">
+                                        {availableTags.map(tag => (
+                                            <button key={tag} onClick={() => toggleFilterTag(tag)} className={`text-[10px] px-2 py-0.5 rounded border transition-colors ${filters.tags.includes(tag) ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-900 border-slate-700 text-slate-400 hover:border-slate-500'}`}>
+                                                {tag}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <button onClick={() => setFilters({name:'', ageMin:'', ageMax:'', gender:'', triage:'', severity:'', tags:[]})} className="text-[10px] text-slate-400 hover:text-white underline pb-1">
+                                    Limpar Filtros
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Modal Gerenciador de Tags */}
+                        {isTagManagerOpen && (
+                            <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-sm flex justify-center items-center z-[60] p-4">
+                                <div className="bg-slate-800 p-5 rounded-xl shadow-2xl border border-slate-700 w-full max-w-md relative animate-fadeIn">
+                                    <button onClick={() => setIsTagManagerOpen(false)} className="absolute top-3 right-3 text-slate-400 hover:text-white p-1 bg-slate-700/50 rounded-lg"><X size={16} /></button>
+                                    <h2 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
+                                        <TagIcon size={18} className="text-blue-400" /> Gerenciar Tags do Sistema
+                                    </h2>
+                                    <p className="text-[11px] text-slate-400 mb-4">As tags são salvas no seu navegador de forma permanente.</p>
+                                    <form onSubmit={handleAddCustomTag} className="flex gap-2 mb-4">
+                                        <input required value={newTagInput} onChange={(e) => setNewTagInput(e.target.value)} placeholder="Nova tag..." className="flex-1 bg-slate-900 border border-slate-700 text-white p-1.5 rounded text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none" />
+                                        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-medium transition-colors">Adicionar</button>
+                                    </form>
+                                    <div className="flex flex-wrap gap-2 max-h-60 overflow-y-auto p-1">
+                                        {availableTags.map(tag => (
+                                            <div key={tag} className="flex items-center gap-1 bg-slate-900 border border-slate-700 rounded-full px-2 py-1">
+                                                <span className="text-[11px] text-slate-300">{tag}</span>
+                                                <button onClick={() => deleteCustomTag(tag)} className="text-slate-500 hover:text-red-400 ml-1"><X size={12} /></button>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
                         )}
 
-                        {/* Modal Pop-up: Adicionar/Editar */}
+                        {/* Modal de Confirmação Limpar Plantão */}
+                        {isConfirmClearOpen && (
+                            <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-sm flex justify-center items-center z-[60] p-4">
+                                <div className="bg-slate-800 p-6 rounded-xl shadow-2xl border border-red-900/50 w-full max-w-md text-center animate-fadeIn">
+                                    <AlertTriangle size={48} className="text-red-500 mx-auto mb-4" />
+                                    <h2 className="text-lg font-bold text-white mb-2">Apagar Todos os Dados?</h2>
+                                    <p className="text-slate-300 text-sm mb-6">Isso removerá todos os pacientes da tela e do local storage. Faça backup antes!</p>
+                                    <div className="flex justify-center gap-3">
+                                        <button onClick={() => setIsConfirmClearOpen(false)} className="bg-slate-700 hover:bg-slate-600 text-white font-medium py-2 px-5 rounded-lg text-sm border border-slate-600">Cancelar</button>
+                                        <button onClick={handleClearAll} className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-5 rounded-lg text-sm flex items-center gap-2"><Trash2 size={16} /> Limpar Plantão</button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Modal: Histórico de Altas e Óbitos */}
+                        {isDischargedModalOpen && (
+                            <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-sm flex justify-center items-start z-50 p-2 overflow-y-auto pt-6 pb-6">
+                                <div className="bg-slate-800 p-4 rounded-xl shadow-2xl border border-slate-700 w-full max-w-4xl relative animate-fadeIn">
+                                    <button onClick={() => setIsDischargedModalOpen(false)} className="absolute top-3 right-3 text-slate-400 hover:text-white p-1 bg-slate-700/50 rounded-lg"><X size={20} /></button>
+                                    <h2 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
+                                        <History size={18} className="text-green-400" /> Histórico (Altas e Óbitos)
+                                    </h2>
+                                    <div className="space-y-2 max-h-[70vh] overflow-y-auto pr-2">
+                                        {dischargedPatients.length === 0 ? (
+                                            <div className="text-center py-6 border border-dashed border-slate-600 rounded-lg text-slate-400 text-sm">Nenhum paciente no histórico atual.</div>
+                                        ) : (
+                                            dischargedPatients.map(p => (
+                                                <div key={p.id} className="bg-slate-900/50 p-3 rounded-lg border border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                                                    <div className="min-w-0 w-full">
+                                                        <div className="flex items-center gap-2 flex-wrap">
+                                                            {p.gender === 'F' ? <Venus size={14} className="text-pink-400 shrink-0" /> : <Mars size={14} className="text-blue-400 shrink-0" />}
+                                                            <span className="font-bold text-slate-200 truncate">{p.name}</span>
+                                                            <span className="text-[10px] bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded shrink-0">{formatAgeDisplay(p)}</span>
+                                                            {p.status === 'deceased' && <span className="bg-red-900/80 text-red-200 text-[10px] px-1.5 py-0.5 rounded border border-red-700 font-bold ml-1 shrink-0">Óbito</span>}
+                                                        </div>
+                                                        <div className="text-xs text-slate-400 mt-1 whitespace-pre-wrap break-all">
+                                                            <span className="font-semibold text-slate-300">Diagnóstico:</span><br />
+                                                            {p.diagnosis || 'Não informado'}
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex gap-1 shrink-0">
+                                                        <button onClick={() => reactivatePatient(p.id)} className="flex items-center gap-1 bg-slate-700 hover:bg-slate-600 text-white px-2 py-1.5 rounded transition-colors text-xs border border-slate-600">
+                                                            <UserCheck size={12} /> {p.status === 'deceased' ? 'Desfazer Óbito' : 'Desfazer Alta'}
+                                                        </button>
+                                                        <button onClick={() => removePatient(p.id)} className="flex items-center gap-1 bg-red-900/30 hover:bg-red-800 text-red-300 hover:text-white px-2 py-1.5 rounded transition-colors text-xs border border-red-800/50">
+                                                            <Trash2 size={12} /> Excluir
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Modal Pop-up: Adicionar/Editar Paciente */}
                         {isModalOpen && (
                             <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-sm flex justify-center items-start z-50 p-2 overflow-y-auto pt-6 pb-6">
                                 <div className="bg-slate-800 p-4 rounded-xl shadow-2xl border border-slate-700 w-full max-w-5xl relative animate-fadeIn">
-                                    
-                                    <button onClick={cancelEdit} className="absolute top-3 right-3 text-slate-400 hover:text-white p-1 bg-slate-700/50 rounded-lg">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                    </button>
-
+                                    <button onClick={() => { resetForm(); setIsModalOpen(false); }} className="absolute top-3 right-3 text-slate-400 hover:text-white p-1 bg-slate-700/50 rounded-lg"><X size={20} /></button>
                                     <h2 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
                                         {editingId ? <Edit size={18} className="text-blue-400" /> : <Plus size={18} className="text-blue-500" />}
                                         {editingId ? 'Editar Paciente' : 'Adicionar Paciente'}
                                     </h2>
-                                    
-                                    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 text-sm">
+                                    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-3 text-sm">
                                         
-                                        <div className="space-y-1">
+                                        <div className="space-y-1 md:col-span-2">
                                             <label className="text-[11px] font-medium text-slate-400">Nome <span className="text-red-500">*</span></label>
                                             <input required name="name" value={formData.name} onChange={handleChange} className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none text-xs" placeholder="Nome do paciente" />
                                         </div>
                                         
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <div className="space-y-1">
+                                        <div className="space-y-1 md:col-span-2">
+                                            <div className="flex justify-between items-center">
                                                 <label className="text-[11px] font-medium text-slate-400">Idade <span className="text-red-500">*</span></label>
-                                                <input required type="number" name="age" value={formData.age} onChange={handleChange} className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none text-xs" placeholder="Anos" />
+                                                <label className="flex items-center gap-1 cursor-pointer text-[10px] text-slate-400 hover:text-white">
+                                                    <input type="checkbox" checked={formData.ageInputMode === 'dob'} onChange={(e) => setFormData(prev => ({...prev, ageInputMode: e.target.checked ? 'dob' : 'manual', dob: '', ageYears: '', ageMonths: '', ageDays: ''}))} className="w-3 h-3 accent-blue-600" />
+                                                    Informar Data de Nasc.
+                                                </label>
+                                            </div>
+                                            {formData.ageInputMode === 'dob' ? (
+                                                <input type="date" name="dob" value={formData.dob} onChange={handleChange} required className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none text-xs" />
+                                            ) : (
+                                                <div className="flex gap-1">
+                                                    <input type="number" name="ageYears" value={formData.ageYears} onChange={handleChange} required className="w-1/3 bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none text-xs text-center" placeholder="Anos" min="0" />
+                                                    <input type="number" name="ageMonths" value={formData.ageMonths} onChange={handleChange} className="w-1/3 bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none text-xs text-center" placeholder="Meses" min="0" max="11" />
+                                                    <input type="number" name="ageDays" value={formData.ageDays} onChange={handleChange} className="w-1/3 bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none text-xs text-center" placeholder="Dias" min="0" max="31" />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-2 md:col-span-2">
+                                            <div className="space-y-1">
+                                                <label className="text-[11px] font-medium text-slate-400">Sexo <span className="text-red-500">*</span></label>
+                                                <select required name="gender" value={formData.gender} onChange={handleChange} className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none text-xs">
+                                                    <option value="M">Masc.</option>
+                                                    <option value="F">Fem.</option>
+                                                </select>
                                             </div>
                                             <div className="space-y-1">
                                                 <label className="text-[11px] font-medium text-slate-400">Leito <span className="text-red-500">*</span></label>
@@ -502,15 +769,15 @@
                                         <div className="space-y-1">
                                             <label className="text-[11px] font-medium text-slate-400">Gravidade (Médica) <span className="text-red-500">*</span></label>
                                             <select required name="severity" value={formData.severity} onChange={handleChange} className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none text-xs">
-                                                <option value="red">Vermelha (Altíssima)</option>
-                                                <option value="orange">Laranja (Alta)</option>
-                                                <option value="yellow">Amarela (Moderada)</option>
-                                                <option value="green">Verde (Baixa)</option>
-                                                <option value="blue">Azul (Mínima)</option>
+                                                <option value="red">Crítico (Vermelho)</option>
+                                                <option value="orange">Grave (Laranja)</option>
+                                                <option value="yellow">Moderado (Amarelo)</option>
+                                                <option value="green">Brando (Verde)</option>
+                                                <option value="blue">Eletivo (Azul)</option>
                                             </select>
                                         </div>
 
-                                        <div className="space-y-1">
+                                        <div className="space-y-1 md:col-span-2">
                                             <label className="text-[11px] font-medium text-slate-400">Timer Reavaliação (HH:MM:SS)</label>
                                             <div className="flex gap-1 items-center">
                                                 <input type="number" name="timerH" value={formData.timerH} onChange={handleChange} className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded text-xs focus:ring-1 focus:ring-blue-500 text-center" placeholder="HH" min="0" />
@@ -527,35 +794,41 @@
                                             )}
                                         </div>
 
-                                        <div className="space-y-1 lg:col-span-3">
+                                        <div className="space-y-1 md:col-span-4">
+                                            <label className="text-[11px] font-medium text-slate-400">Tags Clínicas</label>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {availableTags.map(tag => {
+                                                    const isSelected = formData.tags.includes(tag);
+                                                    return (
+                                                        <button key={tag} type="button" onClick={() => toggleFormTag(tag)} className={`text-[10px] px-2 py-1 rounded-md border transition-colors ${isSelected ? 'bg-blue-600 border-blue-500 text-white font-medium' : 'bg-slate-900 border-slate-700 text-slate-400 hover:border-slate-500'}`}>{tag}</button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-1 md:col-span-4">
                                             <label className="text-[11px] font-medium text-slate-400">Diagnóstico Principal</label>
                                             <textarea name="diagnosis" value={formData.diagnosis} onChange={handleChange} rows="2" className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none resize-y text-xs" placeholder="Suspeita ou diagnóstico..."></textarea>
                                         </div>
-
-                                        <div className="space-y-1 lg:col-span-2">
+                                        <div className="space-y-1 md:col-span-2">
                                             <label className="text-[11px] font-medium text-slate-400">Exames Solicitados</label>
-                                            <textarea name="exams" value={formData.exams} onChange={handleChange} rows="2" className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none resize-y text-xs" placeholder="Ex: Hemograma, TC crânio..."></textarea>
+                                            <textarea name="exams" value={formData.exams} onChange={handleChange} rows="2" className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none resize-y text-xs" placeholder="Ex: Hemograma..."></textarea>
                                         </div>
-
-                                        <div className="space-y-1 lg:col-span-2">
+                                        <div className="space-y-1 md:col-span-2">
                                             <label className="text-[11px] font-medium text-slate-400">Medicações Feitas</label>
-                                            <textarea name="meds" value={formData.meds} onChange={handleChange} rows="2" className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none resize-y text-xs" placeholder="Ex: Dipirona, Ceftriaxona..."></textarea>
+                                            <textarea name="meds" value={formData.meds} onChange={handleChange} rows="2" className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none resize-y text-xs" placeholder="Ex: Dipirona..."></textarea>
                                         </div>
-
-                                        <div className="space-y-1 lg:col-span-2">
+                                        <div className="space-y-1 md:col-span-2">
                                             <label className="text-[11px] font-medium text-orange-500 font-bold">Aguarda O Quê?</label>
-                                            <textarea name="waiting" value={formData.waiting} onChange={handleChange} rows="2" className="w-full bg-orange-900/20 border border-orange-700/50 text-orange-200 p-1.5 rounded focus:ring-1 focus:ring-orange-500 focus:outline-none resize-y text-xs" placeholder="Ex: Resultado laboratório, Vaga UTI..."></textarea>
+                                            <textarea name="waiting" value={formData.waiting} onChange={handleChange} rows="2" className="w-full bg-orange-900/20 border border-orange-700/50 text-orange-200 p-1.5 rounded focus:ring-1 focus:ring-orange-500 focus:outline-none resize-y text-xs" placeholder="Ex: Vaga UTI..."></textarea>
                                         </div>
-
-                                        <div className="space-y-1 lg:col-span-2">
+                                        <div className="space-y-1 md:col-span-2">
                                             <label className="text-[11px] font-medium text-slate-400">Observações</label>
                                             <textarea name="observations" value={formData.observations} onChange={handleChange} rows="2" className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none resize-y text-xs" placeholder="Detalhes importantes..."></textarea>
                                         </div>
 
-                                        <div className="lg:col-span-4 flex justify-end mt-2 gap-2">
-                                            <button type="button" onClick={cancelEdit} className="bg-slate-700 hover:bg-slate-600 text-white font-medium py-1.5 px-4 rounded transition-colors border border-slate-600 text-xs">
-                                                Cancelar
-                                            </button>
+                                        <div className="md:col-span-4 flex justify-end mt-2 gap-2">
+                                            <button type="button" onClick={() => { resetForm(); setIsModalOpen(false); }} className="bg-slate-700 hover:bg-slate-600 text-white font-medium py-1.5 px-4 rounded transition-colors border border-slate-600 text-xs">Cancelar</button>
                                             <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-1.5 px-4 rounded transition-colors flex items-center gap-1.5 shadow-sm text-xs">
                                                 {editingId ? <><Edit size={14} /> Salvar</> : <><Plus size={14} /> Inserir</>}
                                             </button>
@@ -565,125 +838,116 @@
                             </div>
                         )}
 
-                        {/* Cards dos Pacientes (Compactos) */}
+                        {/* Lista Principal de Pacientes */}
                         <div className="space-y-2">
+                            {selectedPatients.size > 0 && (
+                                <div className="bg-blue-900/40 border border-blue-800/50 p-2.5 rounded-lg flex items-center justify-between mb-2 animate-fadeIn">
+                                    <span className="text-blue-200 text-xs md:text-sm font-semibold">{selectedPatients.size} paciente(s) selecionado(s)</span>
+                                    <div className="flex gap-2">
+                                        <button onClick={bulkDischarge} className="bg-green-700 hover:bg-green-600 text-white px-3 py-1.5 rounded text-xs flex items-center gap-1 transition-colors"><UserCheck size={14} /> Dar Alta</button>
+                                        <button onClick={bulkDelete} className="bg-red-700 hover:bg-red-600 text-white px-3 py-1.5 rounded text-xs flex items-center gap-1 transition-colors"><Trash2 size={14} /> Excluir</button>
+                                        <button onClick={() => setSelectedPatients(new Set())} className="bg-slate-700 hover:bg-slate-600 text-slate-200 px-3 py-1.5 rounded text-xs transition-colors border border-slate-600">Cancelar</button>
+                                    </div>
+                                </div>
+                            )}
+
                             {liveSortedPatients.length === 0 ? (
                                 <div className="text-center py-8 bg-slate-800 rounded-lg border border-dashed border-slate-600 text-slate-400 text-sm">
-                                    Nenhum paciente em observação.
+                                    {activePatients.length > 0 ? 'Nenhum paciente corresponde aos filtros atuais.' : 'Nenhum paciente em observação.'}
                                 </div>
                             ) : (
                                 liveSortedPatients.map(patient => {
                                     const timerStyle = getTimerStyles(patient);
                                     const isBlinking = timerStyle.isBlinking;
                                     const isExpanded = !!expandedCards[patient.id];
-                                    const hasClinicalData = patient.diagnosis || patient.exams || patient.meds || patient.waiting || patient.observations;
+                                    const hasClinicalData = patient.diagnosis || patient.exams || patient.meds || patient.observations;
+                                    const isSelected = selectedPatients.has(patient.id);
 
                                     return (
-                                        <div key={patient.id} className="bg-slate-800 rounded-lg shadow-sm border border-slate-700 p-2.5 transition-all relative overflow-hidden">
-                                            
-                                            {/* Cabeçalho do Card */}
+                                        <div key={patient.id} className={`bg-slate-800 rounded-lg shadow-sm border p-2.5 transition-all relative overflow-hidden flex flex-col gap-2 ${isSelected ? 'border-blue-500 bg-slate-800/80' : 'border-slate-700'}`}>
                                             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-2">
-                                                
                                                 <div className="flex flex-col md:flex-row items-start md:items-center gap-3 w-full">
                                                     
-                                                    {/* Nome, Idade, Leito */}
+                                                    {/* Header do Paciente */}
                                                     <div className="flex flex-wrap items-center gap-1.5">
-                                                        <h3 className="text-base font-bold text-white mr-1">{patient.name}</h3>
-                                                        <span className="bg-slate-700 text-slate-300 text-[10px] px-1.5 py-0.5 rounded font-medium border border-slate-600">
-                                                            {patient.age} a
-                                                        </span>
-                                                        <span className="bg-indigo-900/50 text-indigo-300 text-[10px] px-1.5 py-0.5 rounded font-bold border border-indigo-700">
-                                                            {patient.bed}
-                                                        </span>
+                                                        <button onClick={() => toggleSelection(patient.id)} className={`w-5 h-5 flex shrink-0 items-center justify-center rounded border transition-colors mr-1 focus:outline-none ${isSelected ? 'bg-blue-600 border-blue-600 text-white' : 'bg-slate-900 border-slate-500 text-transparent hover:border-blue-400'}`}>
+                                                            <Check size={14} />
+                                                        </button>
+                                                        {patient.gender === 'F' ? <Venus size={16} className="text-pink-400 shrink-0" /> : <Mars size={16} className="text-blue-400 shrink-0" />}
+                                                        <h3 className="text-base font-bold text-white mr-1 truncate max-w-[200px] md:max-w-xs">{patient.name}</h3>
+                                                        <span className="bg-slate-700 text-slate-300 text-[10px] px-1.5 py-0.5 rounded font-medium border border-slate-600 shrink-0">{formatAgeDisplay(patient)}</span>
+                                                        <span className="bg-indigo-900/50 text-indigo-300 text-[10px] px-1.5 py-0.5 rounded font-bold border border-indigo-700 shrink-0">{patient.bed}</span>
                                                     </div>
 
-                                                    {/* Timer acoplado no Header (HH:MM:SS) */}
-                                                    <div className="flex items-center gap-1.5">
-                                                        <div className={`flex items-center gap-1 px-2 py-0.5 rounded font-mono font-bold text-[11px] shadow-sm border
-                                                            ${isBlinking ? 'animate-emergency-blink border-red-500' : 'border-slate-600'}`}
-                                                            style={!isBlinking ? { backgroundColor: timerStyle.backgroundColor, color: timerStyle.color } : {}}
-                                                        >
-                                                            <Clock size={12} />
-                                                            {timerStyle.label}
+                                                    {/* Timer */}
+                                                    <div className="flex items-center gap-1.5 shrink-0">
+                                                        <div className={`flex items-center gap-1 px-2 py-0.5 rounded font-mono font-bold text-[11px] shadow-sm border ${isBlinking ? 'animate-emergency-blink border-red-500' : 'border-slate-600'}`} style={!isBlinking ? { backgroundColor: timerStyle.backgroundColor, color: timerStyle.color } : {}}>
+                                                            <Clock size={12} /> {timerStyle.label}
                                                         </div>
-
                                                         {!patient.timerZeroed && (
-                                                            <button 
-                                                                onClick={() => zeroTimer(patient.id)}
-                                                                className={`p-0.5 rounded border transition-colors flex items-center justify-center
-                                                                    ${isBlinking ? 'border-red-500 text-red-500 hover:bg-red-500 hover:text-white' : 'border-slate-500 text-slate-400 hover:text-white hover:border-slate-400'}`}
-                                                                title="Zerar Timer"
-                                                            >
-                                                                <CheckCircle2 size={14} />
-                                                            </button>
+                                                            <button onClick={() => zeroTimer(patient.id)} className={`p-0.5 rounded border transition-colors flex items-center justify-center ${isBlinking ? 'border-red-500 text-red-500 hover:bg-red-500 hover:text-white' : 'border-slate-500 text-slate-400 hover:text-white hover:border-slate-400'}`} title="Zerar Timer"><CheckCircle2 size={14} /></button>
                                                         )}
                                                     </div>
                                                     
-                                                    {/* Tags de Triagem/Gravidade */}
-                                                    <div className="flex gap-1.5 text-[10px] font-medium lg:ml-auto">
-                                                        <span className={`px-1.5 py-0.5 rounded shadow-sm ${colorMap[patient.triage]}`}>
-                                                            {colorNames[patient.triage]}
-                                                        </span>
-                                                        <span className={`px-1.5 py-0.5 rounded shadow-sm border border-slate-500 ${colorMap[patient.severity]}`}>
-                                                            Med: {colorNames[patient.severity]}
-                                                        </span>
+                                                    {/* Escalas Clínicas */}
+                                                    <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-medium lg:ml-auto">
+                                                        {patient.tags && patient.tags.map(tag => (
+                                                            <span key={tag} className="bg-slate-700/50 text-slate-300 border border-slate-600 px-1.5 py-0.5 rounded flex items-center gap-0.5"><TagIcon size={10} /> {tag}</span>
+                                                        ))}
+                                                        <span className={`px-1.5 py-0.5 rounded shadow-sm ${colorMap[patient.triage]}`}>{colorNamesTriage[patient.triage]}</span>
+                                                        <span className={`px-1.5 py-0.5 rounded shadow-sm border border-slate-500 ${colorMap[patient.severity]}`}>Gravidade: {colorNamesSeverity[patient.severity]}</span>
                                                     </div>
                                                 </div>
 
-                                                {/* Ações (Editar/Apagar) */}
+                                                {/* Ações */}
                                                 <div className="flex gap-0.5 self-start lg:self-auto shrink-0 bg-slate-900/50 p-0.5 rounded border border-slate-700/50">
-                                                    <button onClick={() => handleEdit(patient)} className="text-slate-400 hover:text-blue-400 hover:bg-slate-800 p-1.5 rounded transition-colors" title="Editar">
-                                                        <Edit size={14} />
-                                                    </button>
-                                                    <button onClick={() => removePatient(patient.id)} className="text-slate-400 hover:text-red-400 hover:bg-slate-800 p-1.5 rounded transition-colors" title="Remover">
-                                                        <Trash2 size={14} />
-                                                    </button>
+                                                    <button onClick={() => dischargePatient(patient.id)} className="text-slate-400 hover:text-green-400 hover:bg-slate-800 p-1.5 rounded transition-colors" title="Dar Alta"><UserCheck size={14} /></button>
+                                                    <button onClick={() => declareDeath(patient.id)} className="text-slate-400 hover:text-red-500 hover:bg-slate-800 p-1.5 rounded transition-colors" title="Registrar Óbito"><HeartOff size={14} /></button>
+                                                    <button onClick={() => handleEdit(patient)} className="text-slate-400 hover:text-blue-400 hover:bg-slate-800 p-1.5 rounded transition-colors" title="Editar"><Edit size={14} /></button>
+                                                    <button onClick={() => removePatient(patient.id)} className="text-slate-400 hover:text-red-400 hover:bg-slate-800 p-1.5 rounded transition-colors" title="Remover"><Trash2 size={14} /></button>
                                                 </div>
                                             </div>
 
-                                            {/* Acordeão (Exibe apenas se tiver dados) */}
+                                            {/* Aguarda Fixo */}
+                                            {patient.waiting && (
+                                                <div className="bg-orange-900/10 p-2 rounded border border-orange-800/30 w-full min-w-0">
+                                                    <span className="block text-[10px] font-bold text-orange-500 mb-0.5">Aguarda:</span>
+                                                    <span className="text-orange-200 font-medium text-[11px] whitespace-pre-wrap break-all">{patient.waiting}</span>
+                                                </div>
+                                            )}
+
+                                            {/* Acordeão */}
                                             {hasClinicalData && (
-                                                <button 
-                                                    onClick={() => toggleExpand(patient.id)}
-                                                    className={`mt-2 w-full flex items-center justify-center gap-1 text-[10px] uppercase tracking-wider font-bold py-1 rounded transition-colors border border-dashed
-                                                        ${isExpanded ? 'bg-slate-800 border-slate-600 text-slate-400 hover:bg-slate-700/50' : 'bg-slate-900/40 border-slate-700 text-slate-500 hover:text-slate-300 hover:bg-slate-700/30'}`}
-                                                >
-                                                    {isExpanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-                                                    {isExpanded ? 'Ocultar Evolução' : 'Ver Detalhes Clínicos'}
+                                                <button onClick={() => toggleExpand(patient.id)} className={`w-full flex items-center justify-center gap-1 text-[10px] uppercase tracking-wider font-bold py-1 rounded transition-colors border border-dashed ${isExpanded ? 'bg-slate-800 border-slate-600 text-slate-400 hover:bg-slate-700/50' : 'bg-slate-900/40 border-slate-700 text-slate-500 hover:text-slate-300 hover:bg-slate-700/30'}`}>
+                                                    {isExpanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />} {isExpanded ? 'Ocultar Evolução' : 'Ver Detalhes Clínicos'}
                                                 </button>
                                             )}
 
-                                            {/* Conteúdo Oculto */}
+                                            {/* Conteúdo do Acordeão */}
                                             {isExpanded && hasClinicalData && (
-                                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 pt-2 mt-1 animate-fadeIn text-[11px]">
+                                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 animate-fadeIn text-[11px]">
                                                     {patient.diagnosis && (
-                                                        <div className="bg-slate-900/80 p-2 rounded border border-slate-700/50">
+                                                        <div className="bg-slate-900/80 p-2 rounded border border-slate-700/50 min-w-0">
                                                             <span className="block text-[10px] font-semibold text-slate-400 mb-0.5">Diagnóstico</span>
-                                                            <span className="text-slate-200 whitespace-pre-wrap break-words">{patient.diagnosis}</span>
+                                                            <span className="text-slate-200 whitespace-pre-wrap break-all">{patient.diagnosis}</span>
                                                         </div>
                                                     )}
                                                     {patient.exams && (
-                                                        <div className="bg-slate-900/80 p-2 rounded border border-slate-700/50">
+                                                        <div className="bg-slate-900/80 p-2 rounded border border-slate-700/50 min-w-0">
                                                             <span className="block text-[10px] font-semibold text-slate-400 mb-0.5">Exames</span>
-                                                            <span className="text-slate-200 whitespace-pre-wrap break-words">{patient.exams}</span>
+                                                            <span className="text-slate-200 whitespace-pre-wrap break-all">{patient.exams}</span>
                                                         </div>
                                                     )}
                                                     {patient.meds && (
-                                                        <div className="bg-slate-900/80 p-2 rounded border border-slate-700/50">
+                                                        <div className="bg-slate-900/80 p-2 rounded border border-slate-700/50 min-w-0">
                                                             <span className="block text-[10px] font-semibold text-slate-400 mb-0.5">Medicações</span>
-                                                            <span className="text-slate-200 whitespace-pre-wrap break-words">{patient.meds}</span>
-                                                        </div>
-                                                    )}
-                                                    {patient.waiting && (
-                                                        <div className="bg-orange-900/10 p-2 rounded border border-orange-800/30 lg:col-span-2">
-                                                            <span className="block text-[10px] font-bold text-orange-500 mb-0.5">Aguarda</span>
-                                                            <span className="text-orange-200 font-medium whitespace-pre-wrap break-words">{patient.waiting}</span>
+                                                            <span className="text-slate-200 whitespace-pre-wrap break-all">{patient.meds}</span>
                                                         </div>
                                                     )}
                                                     {patient.observations && (
-                                                        <div className="bg-slate-900/80 p-2 rounded border border-slate-700/50 lg:col-span-full">
+                                                        <div className="bg-slate-900/80 p-2 rounded border border-slate-700/50 lg:col-span-full min-w-0">
                                                             <span className="block text-[10px] font-semibold text-slate-400 mb-0.5">Observações</span>
-                                                            <span className="text-slate-200 italic whitespace-pre-wrap break-words">{patient.observations}</span>
+                                                            <span className="text-slate-200 italic whitespace-pre-wrap break-all">{patient.observations}</span>
                                                         </div>
                                                     )}
                                                 </div>
