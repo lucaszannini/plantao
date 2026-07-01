@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciador de Pacientes</title>
+    <title>Gerenciador de Pacientes - PS & Cirurgia</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -29,6 +29,12 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-fadeIn { animation: fadeIn 0.2s ease-out forwards; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translate(-50%, 20px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+        .toast-animate { animation: slideUp 0.3s ease-out forwards; }
         
         @media print {
             body, .print-only * { color: black !important; }
@@ -47,6 +53,7 @@
     <script type="text/babel">
         const { useState, useEffect, useMemo, useRef } = React;
 
+        // Ícones
         const Clock = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>;
         const CheckCircle2 = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>;
         const Printer = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>;
@@ -56,7 +63,7 @@
         const ChevronDown = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 12 15 18 9"/></svg>;
         const ChevronUp = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="18 15 12 9 6 15"/></svg>;
         const UserCheck = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>;
-        const History = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>;
+        const HistoryIcon = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>;
         const Download = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>;
         const Upload = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>;
         const AlertTriangle = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>;
@@ -67,6 +74,8 @@
         const X = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
         const HeartOff = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="m2 2 20 20"/></svg>;
         const Check = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="20 6 9 17 4 12"/></svg>;
+        const CopyIcon = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>;
+        const FastingIcon = ({size=24, className=""}) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"/><path d="M15 15 3.3 3.3a4.24 4.24 0 0 0 0 6l7.3 7.3c.6.6 1.6.6 2.2 0L15 15Z"/><path d="m15 15 3-3"/><path d="m11 11 3-3"/><path d="m16 2-4 4"/></svg>;
 
         const formatTime = (totalSeconds) => {
             if (totalSeconds < 0) return "00:00:00";
@@ -105,15 +114,24 @@
             const m = parseInt(p.ageMonths);
             const d = parseInt(p.ageDays);
 
-            if (!isNaN(y) && y > 0) parts.push(`${y} a`);
-            if (!isNaN(m) && m > 0) parts.push(`${m} m`);
-            if (!isNaN(d) && d > 0) parts.push(`${d} d`);
+            if (!isNaN(y) && y > 0) parts.push(`${y}a`);
+            if (!isNaN(m) && m > 0) parts.push(`${m}m`);
+            if (!isNaN(d) && d > 0) parts.push(`${d}d`);
 
             if (parts.length === 0) {
-                if (y === 0) return "0 a"; 
+                if (y === 0) return "0a"; 
                 return "? a";
             }
             return parts.join(' ');
+        };
+
+        const formatERStay = (admissionTimeMs) => {
+            if (!admissionTimeMs) return "";
+            const diffMs = Date.now() - admissionTimeMs;
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffMins = Math.floor((diffMs % 3600000) / 60000);
+            if (diffHours > 0) return `${diffHours}h ${diffMins}m`;
+            return `${diffMins}m`;
         };
 
         const getTotalAgeDays = (p) => {
@@ -125,7 +143,9 @@
 
         const LOCAL_STORAGE_KEY = 'plantao_emergencia_data';
         const LOCAL_STORAGE_TAGS_KEY = 'plantao_emergencia_tags';
-        const DEFAULT_TAGS = ["Pediatria", "Gineco-Obstetrícia", "Saúde Mental", "Trauma", "AVC", "IAM", "IVAS", "Sepse", "Cirurgia Geral"];
+        const DEFAULT_TAGS = ["Trauma", "Abdomen Agudo", "Sepse", "IAM", "AVC", "Pediatria", "Gineco-Obstetrícia"];
+
+        const colorNamesSeverity = { red: 'Crítico', orange: 'Grave', yellow: 'Moderado', green: 'Brando', blue: 'Eletivo' };
 
         const App = () => {
             const [patients, setPatients] = useState(() => {
@@ -142,7 +162,7 @@
                             if (!p.gender) p.gender = 'M';
                             if (!p.tags) p.tags = [];
                             if (!p.status) p.status = 'active'; 
-                            // Compatibilidade com idades antigas
+                            if (!p.admissionTime) p.admissionTime = now; // Retrocompatibilidade
                             if (p.age !== undefined && p.ageYears === undefined) p.ageYears = p.age.toString();
                             return p;
                         });
@@ -170,16 +190,24 @@
             const [selectedPatients, setSelectedPatients] = useState(new Set());
             const [newTagInput, setNewTagInput] = useState('');
             const [currentDateStr, setCurrentDateStr] = useState(new Date().toDateString());
+            const [toastMessage, setToastMessage] = useState(null);
+            
             const fileInputRef = useRef(null);
             
             const [formData, setFormData] = useState({
                 name: '', ageInputMode: 'manual', ageYears: '', ageMonths: '', ageDays: '', dob: '', 
-                gender: 'M', bed: '', triage: 'green', severity: 'green',
-                diagnosis: '', exams: '', meds: '', waiting: '', observations: '', 
+                gender: 'M', bed: '', triage: 'green', severity: 'green', fasting: false,
+                vitals: '', diagnosis: '', exams: '', meds: '', waiting: '', observations: '', 
                 timerH: '', timerM: '', timerS: '', resetTimer: false, tags: []
             });
 
             const [filters, setFilters] = useState({ name: '', ageMin: '', ageMax: '', gender: '', triage: '', severity: '', tags: [] });
+
+            // Toast system
+            const showToast = (message) => {
+                setToastMessage(message);
+                setTimeout(() => setToastMessage(null), 3000);
+            };
 
             // Timer Tick de 1 segundo
             useEffect(() => {
@@ -252,9 +280,7 @@
             };
 
             const deleteCustomTag = (tagToDelete) => {
-                if(confirm(`Excluir a tag "${tagToDelete}" do sistema? (Ela permanecerá nos pacientes que já a possuem)`)) {
-                    setAvailableTags(prev => prev.filter(t => t !== tagToDelete));
-                }
+                setAvailableTags(prev => prev.filter(t => t !== tagToDelete));
             };
 
             const handleSubmit = (e) => {
@@ -308,9 +334,14 @@
                     setEditingId(null);
                 } else {
                     const newPatient = {
-                        id: generateId(), ...formData, ...finalAgeData,
-                        originalTimerSec: originalSecs, currentTimerSec: originalSecs,
-                        timerZeroed: timerZeroed, status: 'active'
+                        id: generateId(), 
+                        ...formData, 
+                        ...finalAgeData,
+                        admissionTime: Date.now(),
+                        originalTimerSec: originalSecs, 
+                        currentTimerSec: originalSecs,
+                        timerZeroed: timerZeroed, 
+                        status: 'active'
                     };
                     setPatients(prev => [...prev, newPatient]);
                 }
@@ -332,6 +363,8 @@
                     ageDays: patient.ageDays !== undefined ? patient.ageDays.toString() : '', 
                     gender: patient.gender || 'M', bed: patient.bed,
                     triage: patient.triage, severity: patient.severity,
+                    fasting: patient.fasting || false,
+                    vitals: patient.vitals || '',
                     diagnosis: patient.diagnosis, exams: patient.exams, meds: patient.meds,
                     waiting: patient.waiting, observations: patient.observations, tags: patient.tags || [],
                     timerH: h > 0 ? h.toString() : '', timerM: m > 0 ? m.toString() : '', timerS: s > 0 ? s.toString() : '',
@@ -344,10 +377,49 @@
                 setEditingId(null);
                 setFormData({
                     name: '', ageInputMode: 'manual', ageYears: '', ageMonths: '', ageDays: '', dob: '', 
-                    gender: 'M', bed: '', triage: 'green', severity: 'green',
+                    gender: 'M', bed: '', triage: 'green', severity: 'green', fasting: false, vitals: '',
                     diagnosis: '', exams: '', meds: '', waiting: '', observations: '', tags: [],
                     timerH: '', timerM: '', timerS: '', resetTimer: false
                 });
+            };
+
+            const addTimerMinutes = (id, mins) => {
+                setPatients(prev => prev.map(p => {
+                    if (p.id === id) {
+                        const newTimer = (p.timerZeroed ? 0 : p.currentTimerSec) + (mins * 60);
+                        return { ...p, currentTimerSec: newTimer, timerZeroed: false };
+                    }
+                    return p;
+                }));
+            };
+
+            const generateHandoffText = (p) => {
+                let text = `*${p.name}* (${formatAgeDisplay(p)}, ${p.gender === 'F' ? 'Fem' : 'Masc'})\n`;
+                text += `*Leito:* ${p.bed} | *Gravidade:* ${colorNamesSeverity[p.severity]}\n`;
+                text += `*Tempo no PS:* ${formatERStay(p.admissionTime)}\n`;
+                if (p.fasting) text += `⚠️ *NPO*\n`;
+                if (p.vitals) text += `*Sinais Vitais:* ${p.vitals}\n`;
+                if (p.diagnosis) text += `*HD:* ${p.diagnosis}\n`;
+                if (p.meds) text += `*Medicações:* ${p.meds}\n`;
+                if (p.exams) text += `*Exames:* ${p.exams}\n`;
+                if (p.waiting) text += `*Aguarda:* ${p.waiting}\n`;
+                if (p.observations) text += `*Obs:* ${p.observations}`;
+                return text;
+            };
+
+            const copyHandoff = (p) => {
+                const text = generateHandoffText(p);
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast(`Plantão copiado: ${p.name}`);
+                } catch (err) {
+                    console.error('Falha ao copiar', err);
+                }
+                document.body.removeChild(textArea);
             };
 
             const removePatient = (id) => setPatients(prev => prev.filter(p => p.id !== id));
@@ -369,10 +441,9 @@
             };
 
             const bulkDelete = () => {
-                if(confirm(`Tem certeza que deseja excluir ${selectedPatients.size} paciente(s)?`)) {
-                    setPatients(prev => prev.filter(p => !selectedPatients.has(p.id)));
-                    setSelectedPatients(new Set());
-                }
+                setPatients(prev => prev.filter(p => !selectedPatients.has(p.id)));
+                setSelectedPatients(new Set());
+                setIsConfirmClearOpen(false);
             };
 
             const handleClearAll = () => {
@@ -411,11 +482,12 @@
                             if (!p.gender) p.gender = 'M';
                             if (!p.tags) p.tags = [];
                             if (!p.status) p.status = 'active';
+                            if (!p.admissionTime) p.admissionTime = now;
                             if (p.age !== undefined && p.ageYears === undefined) p.ageYears = p.age.toString();
                             return p;
                         });
                         setPatients(adjustedPatients);
-                    } catch (err) { alert("Erro ao importar o arquivo. Verifique se é um backup válido."); }
+                    } catch (err) { console.error("Erro ao importar o arquivo."); }
                 };
                 reader.readAsText(file);
                 e.target.value = '';
@@ -427,7 +499,6 @@
                 yellow: 'bg-yellow-400 text-black', green: 'bg-green-500 text-white', blue: 'bg-blue-600 text-white'
             };
             const colorNamesTriage = { red: 'Vermelha', orange: 'Laranja', yellow: 'Amarela', green: 'Verde', blue: 'Azul' };
-            const colorNamesSeverity = { red: 'Crítico', orange: 'Grave', yellow: 'Moderado', green: 'Brando', blue: 'Eletivo' };
 
             const activePatients = useMemo(() => patients.filter(p => p.status === 'active'), [patients]);
             const dischargedPatients = useMemo(() => patients.filter(p => p.status === 'discharged' || p.status === 'deceased'), [patients]);
@@ -486,6 +557,14 @@
             return (
                 <div className="min-h-screen bg-slate-900 p-1 md:p-3 font-sans text-slate-100 relative text-xs md:text-sm">
                     
+                    {/* Toast Notification */}
+                    {toastMessage && (
+                        <div className="fixed bottom-4 left-1/2 z-50 flex items-center bg-emerald-600 text-white px-4 py-2 rounded-full shadow-lg toast-animate border border-emerald-500">
+                            <CheckCircle2 size={16} className="mr-2" />
+                            <span className="font-medium text-sm">{toastMessage}</span>
+                        </div>
+                    )}
+
                     {/* IMPRESSÃO (PDF) */}
                     {isPrinting && (
                         <div className="print-only w-full">
@@ -506,8 +585,8 @@
                                     {pdfSortedPatients.map(p => (
                                         <tr key={p.id}>
                                             <td>
-                                                <span className="font-bold text-sm block leading-tight">{p.name}</span>
-                                                <span className="block mt-1 text-xs">{formatAgeDisplay(p)} ({p.gender === 'F' ? 'F' : 'M'})</span>
+                                                <span className="font-bold text-sm block leading-tight">{p.name} {p.fasting && '(NPO)'}</span>
+                                                <span className="block mt-1 text-xs">{formatAgeDisplay(p)} ({p.gender})</span>
                                                 <span className="block mt-1 text-xs font-semibold">{p.bed}</span>
                                             </td>
                                             <td className="font-bold text-center">{colorNamesTriage[p.triage]}</td>
@@ -531,7 +610,7 @@
                             <div>
                                 <h1 className="text-lg font-bold text-white flex items-center gap-1.5">
                                     <Clock size={20} className="text-blue-500" />
-                                    Gestão de Pacientes
+                                    Gestão de Pacientes ER
                                 </h1>
                             </div>
                             <div className="mt-2 md:mt-0 flex flex-wrap gap-2">
@@ -547,7 +626,7 @@
                                     <Trash2 size={14} /> Limpar Plantão
                                 </button>
                                 <button onClick={() => setIsDischargedModalOpen(true)} className="flex items-center gap-1 bg-green-900/40 hover:bg-green-800 text-green-300 hover:text-white px-2.5 py-1.5 rounded-md font-medium transition-colors border border-green-800/60 text-xs mr-2">
-                                    <History size={14} /> Histórico (Altas/Óbitos)
+                                    <HistoryIcon size={14} /> Histórico
                                 </button>
                                 <button onClick={() => fileInputRef.current.click()} className="flex items-center gap-1 bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-md font-medium transition-colors border border-slate-600 text-xs">
                                     <Upload size={14} /> Restaurar
@@ -632,7 +711,7 @@
                                     <h2 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
                                         <TagIcon size={18} className="text-blue-400" /> Gerenciar Tags do Sistema
                                     </h2>
-                                    <p className="text-[11px] text-slate-400 mb-4">As tags são salvas no seu navegador de forma permanente.</p>
+                                    <p className="text-[11px] text-slate-400 mb-4">As tags são salvas no seu navegador.</p>
                                     <form onSubmit={handleAddCustomTag} className="flex gap-2 mb-4">
                                         <input required value={newTagInput} onChange={(e) => setNewTagInput(e.target.value)} placeholder="Nova tag..." className="flex-1 bg-slate-900 border border-slate-700 text-white p-1.5 rounded text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none" />
                                         <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-medium transition-colors">Adicionar</button>
@@ -654,11 +733,13 @@
                             <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-sm flex justify-center items-center z-[60] p-4">
                                 <div className="bg-slate-800 p-6 rounded-xl shadow-2xl border border-red-900/50 w-full max-w-md text-center animate-fadeIn">
                                     <AlertTriangle size={48} className="text-red-500 mx-auto mb-4" />
-                                    <h2 className="text-lg font-bold text-white mb-2">Apagar Todos os Dados?</h2>
-                                    <p className="text-slate-300 text-sm mb-6">Isso removerá todos os pacientes da tela e do local storage. Faça backup antes!</p>
+                                    <h2 className="text-lg font-bold text-white mb-2">Ação Destrutiva</h2>
+                                    <p className="text-slate-300 text-sm mb-6">Esta ação removerá pacientes selecionados ou todos os dados se nenhum estiver selecionado. Tem certeza?</p>
                                     <div className="flex justify-center gap-3">
                                         <button onClick={() => setIsConfirmClearOpen(false)} className="bg-slate-700 hover:bg-slate-600 text-white font-medium py-2 px-5 rounded-lg text-sm border border-slate-600">Cancelar</button>
-                                        <button onClick={handleClearAll} className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-5 rounded-lg text-sm flex items-center gap-2"><Trash2 size={16} /> Limpar Plantão</button>
+                                        <button onClick={selectedPatients.size > 0 ? bulkDelete : handleClearAll} className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-5 rounded-lg text-sm flex items-center gap-2">
+                                            <Trash2 size={16} /> Confirmar Exclusão
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -670,7 +751,7 @@
                                 <div className="bg-slate-800 p-4 rounded-xl shadow-2xl border border-slate-700 w-full max-w-4xl relative animate-fadeIn">
                                     <button onClick={() => setIsDischargedModalOpen(false)} className="absolute top-3 right-3 text-slate-400 hover:text-white p-1 bg-slate-700/50 rounded-lg"><X size={20} /></button>
                                     <h2 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
-                                        <History size={18} className="text-green-400" /> Histórico (Altas e Óbitos)
+                                        <HistoryIcon size={18} className="text-green-400" /> Histórico (Altas e Óbitos)
                                     </h2>
                                     <div className="space-y-2 max-h-[70vh] overflow-y-auto pr-2">
                                         {dischargedPatients.length === 0 ? (
@@ -750,7 +831,13 @@
                                                 </select>
                                             </div>
                                             <div className="space-y-1">
-                                                <label className="text-[11px] font-medium text-slate-400">Leito <span className="text-red-500">*</span></label>
+                                                <div className="flex justify-between items-center mb-1">
+                                                    <label className="text-[11px] font-medium text-slate-400">Leito <span className="text-red-500">*</span></label>
+                                                    <label className="flex items-center gap-1 cursor-pointer text-[10px] text-red-400 font-bold hover:text-red-300">
+                                                        <input type="checkbox" name="fasting" checked={formData.fasting} onChange={handleChange} className="w-3 h-3 accent-red-600" />
+                                                        NPO
+                                                    </label>
+                                                </div>
                                                 <input required name="bed" value={formData.bed} onChange={handleChange} className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none text-xs" placeholder="Ex: Obs-01" />
                                             </div>
                                         </div>
@@ -806,21 +893,27 @@
                                             </div>
                                         </div>
 
+                                        {/* Novos Campos Médicos */}
+                                        <div className="space-y-1 md:col-span-4">
+                                            <label className="text-[11px] font-medium text-emerald-400">Sinais Vitais (PA, FC, FR, SatO2, Temp, HGT)</label>
+                                            <input name="vitals" value={formData.vitals} onChange={handleChange} className="w-full bg-slate-900 border border-emerald-900/50 text-emerald-100 p-1.5 rounded focus:ring-1 focus:ring-emerald-500 focus:outline-none text-xs" placeholder="Ex: PA 120x80, FC 90, SatO2 98%" />
+                                        </div>
+
                                         <div className="space-y-1 md:col-span-4">
                                             <label className="text-[11px] font-medium text-slate-400">Diagnóstico Principal</label>
                                             <textarea name="diagnosis" value={formData.diagnosis} onChange={handleChange} rows="2" className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none resize-y text-xs" placeholder="Suspeita ou diagnóstico..."></textarea>
                                         </div>
                                         <div className="space-y-1 md:col-span-2">
                                             <label className="text-[11px] font-medium text-slate-400">Exames Solicitados</label>
-                                            <textarea name="exams" value={formData.exams} onChange={handleChange} rows="2" className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none resize-y text-xs" placeholder="Ex: Hemograma..."></textarea>
+                                            <textarea name="exams" value={formData.exams} onChange={handleChange} rows="2" className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none resize-y text-xs" placeholder="Ex: Hemograma, TC Abdomen..."></textarea>
                                         </div>
                                         <div className="space-y-1 md:col-span-2">
                                             <label className="text-[11px] font-medium text-slate-400">Medicações Feitas</label>
-                                            <textarea name="meds" value={formData.meds} onChange={handleChange} rows="2" className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none resize-y text-xs" placeholder="Ex: Dipirona..."></textarea>
+                                            <textarea name="meds" value={formData.meds} onChange={handleChange} rows="2" className="w-full bg-slate-900 border border-slate-700 text-white p-1.5 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none resize-y text-xs" placeholder="Ex: Dipirona, Plasil, Ceftriaxona..."></textarea>
                                         </div>
                                         <div className="space-y-1 md:col-span-2">
                                             <label className="text-[11px] font-medium text-orange-500 font-bold">Aguarda O Quê?</label>
-                                            <textarea name="waiting" value={formData.waiting} onChange={handleChange} rows="2" className="w-full bg-orange-900/20 border border-orange-700/50 text-orange-200 p-1.5 rounded focus:ring-1 focus:ring-orange-500 focus:outline-none resize-y text-xs" placeholder="Ex: Vaga UTI..."></textarea>
+                                            <textarea name="waiting" value={formData.waiting} onChange={handleChange} rows="2" className="w-full bg-orange-900/20 border border-orange-700/50 text-orange-200 p-1.5 rounded focus:ring-1 focus:ring-orange-500 focus:outline-none resize-y text-xs" placeholder="Ex: Vaga Cirúrgica, TC, Exames..."></textarea>
                                         </div>
                                         <div className="space-y-1 md:col-span-2">
                                             <label className="text-[11px] font-medium text-slate-400">Observações</label>
@@ -845,7 +938,7 @@
                                     <span className="text-blue-200 text-xs md:text-sm font-semibold">{selectedPatients.size} paciente(s) selecionado(s)</span>
                                     <div className="flex gap-2">
                                         <button onClick={bulkDischarge} className="bg-green-700 hover:bg-green-600 text-white px-3 py-1.5 rounded text-xs flex items-center gap-1 transition-colors"><UserCheck size={14} /> Dar Alta</button>
-                                        <button onClick={bulkDelete} className="bg-red-700 hover:bg-red-600 text-white px-3 py-1.5 rounded text-xs flex items-center gap-1 transition-colors"><Trash2 size={14} /> Excluir</button>
+                                        <button onClick={() => setIsConfirmClearOpen(true)} className="bg-red-700 hover:bg-red-600 text-white px-3 py-1.5 rounded text-xs flex items-center gap-1 transition-colors"><Trash2 size={14} /> Excluir</button>
                                         <button onClick={() => setSelectedPatients(new Set())} className="bg-slate-700 hover:bg-slate-600 text-slate-200 px-3 py-1.5 rounded text-xs transition-colors border border-slate-600">Cancelar</button>
                                     </div>
                                 </div>
@@ -860,7 +953,7 @@
                                     const timerStyle = getTimerStyles(patient);
                                     const isBlinking = timerStyle.isBlinking;
                                     const isExpanded = !!expandedCards[patient.id];
-                                    const hasClinicalData = patient.diagnosis || patient.exams || patient.meds || patient.observations;
+                                    const hasClinicalData = patient.diagnosis || patient.exams || patient.meds || patient.observations || patient.vitals;
                                     const isSelected = selectedPatients.has(patient.id);
 
                                     return (
@@ -877,20 +970,30 @@
                                                         <h3 className="text-base font-bold text-white mr-1 truncate max-w-[200px] md:max-w-xs">{patient.name}</h3>
                                                         <span className="bg-slate-700 text-slate-300 text-[10px] px-1.5 py-0.5 rounded font-medium border border-slate-600 shrink-0">{formatAgeDisplay(patient)}</span>
                                                         <span className="bg-indigo-900/50 text-indigo-300 text-[10px] px-1.5 py-0.5 rounded font-bold border border-indigo-700 shrink-0">{patient.bed}</span>
+                                                        
+                                                        {/* Badge NPO */}
+                                                        {patient.fasting && (
+                                                            <span className="bg-red-900 text-red-200 text-[10px] px-1.5 py-0.5 rounded font-bold border border-red-700 shrink-0 flex items-center gap-1 shadow-sm"><FastingIcon size={12}/> NPO</span>
+                                                        )}
                                                     </div>
 
-                                                    {/* Timer */}
-                                                    <div className="flex items-center gap-1.5 shrink-0">
+                                                    {/* Timer e Adição Rápida */}
+                                                    <div className="flex items-center gap-1 shrink-0 bg-slate-900/50 p-1 rounded-md border border-slate-700/50">
                                                         <div className={`flex items-center gap-1 px-2 py-0.5 rounded font-mono font-bold text-[11px] shadow-sm border ${isBlinking ? 'animate-emergency-blink border-red-500' : 'border-slate-600'}`} style={!isBlinking ? { backgroundColor: timerStyle.backgroundColor, color: timerStyle.color } : {}}>
                                                             <Clock size={12} /> {timerStyle.label}
                                                         </div>
+                                                        <div className="flex flex-col ml-0.5 justify-center">
+                                                            <button onClick={() => addTimerMinutes(patient.id, 15)} className="text-[9px] font-bold text-slate-400 hover:text-blue-400 px-1 hover:bg-slate-800 rounded leading-none py-0.5" title="Adicionar 15min">+15</button>
+                                                            <button onClick={() => addTimerMinutes(patient.id, 30)} className="text-[9px] font-bold text-slate-400 hover:text-blue-400 px-1 hover:bg-slate-800 rounded leading-none py-0.5" title="Adicionar 30min">+30</button>
+                                                        </div>
                                                         {!patient.timerZeroed && (
-                                                            <button onClick={() => zeroTimer(patient.id)} className={`p-0.5 rounded border transition-colors flex items-center justify-center ${isBlinking ? 'border-red-500 text-red-500 hover:bg-red-500 hover:text-white' : 'border-slate-500 text-slate-400 hover:text-white hover:border-slate-400'}`} title="Zerar Timer"><CheckCircle2 size={14} /></button>
+                                                            <button onClick={() => zeroTimer(patient.id)} className={`p-1 rounded border transition-colors flex items-center justify-center ml-0.5 ${isBlinking ? 'border-red-500 text-red-500 hover:bg-red-500 hover:text-white' : 'border-slate-500 text-slate-400 hover:text-white hover:border-slate-400'}`} title="Zerar Timer"><CheckCircle2 size={12} /></button>
                                                         )}
                                                     </div>
                                                     
-                                                    {/* Escalas Clínicas */}
+                                                    {/* Escalas Clínicas e Tempo */}
                                                     <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-medium lg:ml-auto">
+                                                        <span className="text-slate-400 bg-slate-800 border border-slate-700 px-1.5 py-0.5 rounded shadow-sm">No PS: {formatERStay(patient.admissionTime)}</span>
                                                         {patient.tags && patient.tags.map(tag => (
                                                             <span key={tag} className="bg-slate-700/50 text-slate-300 border border-slate-600 px-1.5 py-0.5 rounded flex items-center gap-0.5"><TagIcon size={10} /> {tag}</span>
                                                         ))}
@@ -899,12 +1002,12 @@
                                                     </div>
                                                 </div>
 
-                                                {/* Ações */}
+                                                {/* Ações Rápidas */}
                                                 <div className="flex gap-0.5 self-start lg:self-auto shrink-0 bg-slate-900/50 p-0.5 rounded border border-slate-700/50">
+                                                    <button onClick={() => copyHandoff(patient)} className="text-slate-400 hover:text-emerald-400 hover:bg-slate-800 p-1.5 rounded transition-colors" title="Copiar P/ Passagem de Plantão"><CopyIcon size={14} /></button>
                                                     <button onClick={() => dischargePatient(patient.id)} className="text-slate-400 hover:text-green-400 hover:bg-slate-800 p-1.5 rounded transition-colors" title="Dar Alta"><UserCheck size={14} /></button>
                                                     <button onClick={() => declareDeath(patient.id)} className="text-slate-400 hover:text-red-500 hover:bg-slate-800 p-1.5 rounded transition-colors" title="Registrar Óbito"><HeartOff size={14} /></button>
                                                     <button onClick={() => handleEdit(patient)} className="text-slate-400 hover:text-blue-400 hover:bg-slate-800 p-1.5 rounded transition-colors" title="Editar"><Edit size={14} /></button>
-                                                    <button onClick={() => removePatient(patient.id)} className="text-slate-400 hover:text-red-400 hover:bg-slate-800 p-1.5 rounded transition-colors" title="Remover"><Trash2 size={14} /></button>
                                                 </div>
                                             </div>
 
@@ -926,6 +1029,12 @@
                                             {/* Conteúdo do Acordeão */}
                                             {isExpanded && hasClinicalData && (
                                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 animate-fadeIn text-[11px]">
+                                                    {patient.vitals && (
+                                                        <div className="bg-emerald-900/20 p-2 rounded border border-emerald-800/30 min-w-0 lg:col-span-full">
+                                                            <span className="block text-[10px] font-bold text-emerald-400 mb-0.5">Sinais Vitais</span>
+                                                            <span className="text-emerald-100 whitespace-pre-wrap break-all">{patient.vitals}</span>
+                                                        </div>
+                                                    )}
                                                     {patient.diagnosis && (
                                                         <div className="bg-slate-900/80 p-2 rounded border border-slate-700/50 min-w-0">
                                                             <span className="block text-[10px] font-semibold text-slate-400 mb-0.5">Diagnóstico</span>
